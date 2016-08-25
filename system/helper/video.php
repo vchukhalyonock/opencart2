@@ -101,6 +101,39 @@ if ( !function_exists('youtube_id_from_url') ) {
 }
 
 
+if ( !function_exists('writeVideoFromYoutube') ) {
+	/**
+	 * @param $path
+	 * @param $data
+	 * @param string $mode
+	 * @return bool
+	 */
+	function writeVideoFromYoutube($path, $data, $mode = FOPEN_WRITE_CREATE_DESTRUCTIVE)
+	{
+		if ( !$fp = @fopen($path, $mode) ) {
+			return FALSE;
+		}
+
+		flock($fp, LOCK_EX);
+		$handle = fopen($data, "r");
+		if ( $handle ) {
+			flock($handle, LOCK_EX);
+			while ( !feof($handle) ) {
+				$buffer = fgets($handle, 4096);
+				file_put_contents($path, $buffer, FILE_APPEND);
+			}
+			flock($handle, LOCK_UN);
+			fclose($handle);
+		} else {
+			return FALSE;
+		}
+		flock($fp, LOCK_UN);
+		fclose($fp);
+
+		return TRUE;
+	}
+}
+
 if ( !function_exists('downloadFromYoutube') ) {
 	/**
 	 * @param string $video_id
