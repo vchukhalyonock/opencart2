@@ -105,7 +105,10 @@ class ModelVideoChannel extends Model {
 
 
 	public function deleteGroup(int $groupId) {
+		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `groupId`=" . $groupId);
+		$this->db->query("DELETE FROM " . $this->_groupsTable . " WHERE `id`=" . $groupId);
 
+		return;
 	}
 
 
