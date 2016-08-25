@@ -199,4 +199,140 @@ if ( !function_exists('downloadFromYoutube') ) {
 
 
 
+if ( !function_exists('uploadToYoutube') ) {
+	/**
+	 * @param string $video_id
+	 * @param string $video_category
+	 * @param string $video_title
+	 * @param string $video_desc
+	 * @param array $video_tags
+	 * @return bool
+	 */
+	function uploadToYoutube($video_id = '', $video_category = '22', $video_title = '', $video_desc = '', array $video_tags = array())
+	{
+		$scope = array(
+			'https://www.googleapis.com/auth/youtube.upload',
+			'https://www.googleapis.com/auth/youtube',
+			'https://www.googleapis.com/auth/youtubepartner',
+			'https://www.googleapis.com/auth/youtube.force-ssl'
+			);
+
+
+		require_once DIR_THIRD_PARTY . 'Google/autoload.php';
+
+		$key = file_get_contents(YOUTUBE_TOKEN_FILE_PATH);
+
+
+		//REWRITE THIS
+		// get file name by video id
+		$dirMap = directory_map($root_folder . '/' . $upload_dir . '/');
+		foreach ( $dirMap as $file ) {
+			if ( preg_match("/^" . $video_id . "\.[a-zA-Z0-9]{1,4}$/", $file) ) {
+				$fileName = $file;
+				break;
+			}
+		}
+
+		// construct full path for video
+		$final_video_path = DIR_VIDEO . $fileName;
+
+		try {
+			// Client init
+			$client = new Google_Client();
+			$client->setApplicationName(YOUTUBE_APPLICATION_NAME);
+			$client->setClientId(YOUTUBE_CLIENT_ID);
+			$client->setAccessType('offline');
+			$client->setAccessToken(YOUTUBE_CLIENT_KEY);
+			$client->setScopes($scope);
+			$client->setClientSecret(YOUTUBE_CLIENT_SECRET);
+
+			if ( $client->getAccessToken() ) {
+
+				/**
+				 * Check to see if our access token has expired. If so, get a new one and save it to file for future use.
+				 */
+				if ( $client->isAccessTokenExpired() ) {
+					$newToken = json_decode($client->getAccessToken());
+					$client->refreshToken($newToken->refresh_token);
+					file_put_contents($token_path, $client->getAccessToken());
+				}
+
+				$youtube = new Google_Service_YouTube($client);
+
+				// Create a snipet with title, description, tags and category id
+				$snippet = new Google_Service_YouTube_VideoSnippet();
+				$snippet->setTitle($video_title);
+				$snippet->setDescription($video_desc);
+				$snippet->setCategoryId($video_category);
+				$snippet->setTags($video_tags);
+
+				// Create a video status with privacy status. Options are "public", "private" and "unlisted".
+				$status = new Google_Service_YouTube_VideoStatus();
+				$status->setPrivacyStatus('public');
+
+				// Create a YouTube video with snippet and status
+				$video = new Google_Service_YouTube_Video();
+				$video->setSnippet($snippet);
+				$video->setStatus($status);
+
+				// Size of each chunk of data in bytes. Setting it higher leads faster upload (less chunks,
+				// for reliable connections). Setting it lower leads better recovery (fine-grained chunks)
+				$chunkSizeBytes = 1 * 1024 * 1024;
+
+				// Setting the defer flag to true tells the client to return a request which can be called
+				// with ->execute(); instead of making the API call immediately.
+				$client->setDefer(true);
+
+				// Create a request for the API's videos.insert method to create and upload the video.
+				$insertRequest = $youtube->videos->insert("status,snippet", $video);
+
+				// Create a MediaFileUpload object for resumable uploads.
+				$media = new Google_Http_MediaFileUpload(
+					$client,
+					$insertRequest,
+					'video/*',
+					null,
+					true,
+					$chunkSizeBytes
+				);
+				$media->setFileSize(filesize($final_video_path));
+
+
+				// Read the media file and upload it chunk by chunk.
+				$status = false;
+				$handle = fopen($final_video_path, "rb");
+				while ( !$status && !feof($handle) ) {
+					$chunk = fread($handle, $chunkSizeBytes);
+					$status = $media->nextChunk($chunk);
+				}
+
+				fclose($handle);
+
+				/**
+				 * Video has successfully been upload, now lets perform some cleanup functions for this video
+				 */
+				if ( $status->status['uploadStatus'] == 'uploaded' ) {
+					// Actions to perform for a successful upload
+					if ( FALSE === unlink($final_video_path) ) {
+						return false;
+					}
+					return $status;
+				}
+
+				// If you want to make other calls after the file upload, set setDefer back to false
+				$client->setDefer(true);
+
+			} else {
+				return FALSE;
+			}
+
+		} catch ( Google_Service_Exception $e ) {
+			return FALSE;
+		} catch ( Exception $e ) {
+			return FALSE;
+		}
+	}
+}
+
+
 ?>

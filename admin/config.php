@@ -21,6 +21,7 @@ define('DIR_MODIFICATION', '/home/mcmxx/www/opencart/system/storage/modification
 define('DIR_UPLOAD', '/home/mcmxx/www/opencart/system/storage/upload/');
 define('DIR_CATALOG', '/home/mcmxx/www/opencart/catalog/');
 define('DIR_VIDEO', '/home/mcmxx/www/opencart/system/storage/upload/videos/');
+define('DIR_THIRD_PARTY', '/home/mcmxx/www/opencart/system/third_party/');
 
 // DB
 define('DB_DRIVER', 'mysqli');
@@ -55,3 +56,8 @@ define("READY", 1 << 7);
 
 //YOUTUBE
 define("YOUTUBE_CLIENT_KEY", "");
+define("YOUTUBE_TOKEN_FILE_PATH", "/home/mcmxx/www/opencart/system/config/token.txt");
+define("YOUTUBE_APPLICATION_NAME", "Test Name");
+define("YOUTUBE_CLIENT_SECRET", "");
+define("YOUTUBE_CLIENT_ID", "");
+
