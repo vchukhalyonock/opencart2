@@ -359,7 +359,8 @@ class ModelVideoChannel extends Model {
 
 
 	public function groupVideoUnAssoc(int $videoId, int $groupId) {
-
+		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId . " AND `groupId`=" . $groupId . " LIMIT 1");
+		return;
 	}
 
 
