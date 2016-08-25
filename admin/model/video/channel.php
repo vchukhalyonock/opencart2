@@ -15,8 +15,8 @@ class ModelVideoChannel extends Model {
 		$description = isset($param['description']) ? strval($param['description']) : NULL;
 
 		$query = "INSERT INTO " . $this->_groupsTable . "(`name`, `description`) VALUES (";
-		$query .= is_null($name) ? "NULL, " : $this->db->escape($name) . ", ";
-		$query .= is_null($description) ? "NULL, " : $this->db->escape($description) . ")";
+		$query .= is_null($name) ? "NULL, " : "'" . $this->db->escape($name) . "', ";
+		$query .= is_null($description) ? "NULL, " : "'" . $this->db->escape($description) . "')";
 
 		$this->db->query($query);
 
@@ -36,12 +36,12 @@ class ModelVideoChannel extends Model {
 		if(array_key_exists('name', $param) || array_key_exists('description', $param)) {
 			if(array_key_exists('name', $param)) {
 				$name = isset($param['name']) ? strval($param['name']) : NULL;
-				$queryArray[] = is_null($name) ? "`name`=NULL, " : "`name`=" . $this->db->escape($name);
+				$queryArray[] = is_null($name) ? "`name`=NULL, " : "`name`='" . $this->db->escape($name) . "'";
 			}
 
 			if(array_key_exists('description', $param)) {
-				$name = isset($param['description']) ? strval($param['description']) : NULL;
-				$queryArray[] = is_null($description) ? "`description`=NULL, " : "`description`=" . $this->db->escape($description);
+				$description = isset($param['description']) ? strval($param['description']) : NULL;
+				$queryArray[] = is_null($description) ? "`description`=NULL, " : "`description`='" . $this->db->escape($description) . "'";
 			}
 
 			$query = "UPDATE " . $this->_groupsTable . " SET " . implode(",", $queryArray) . " WHERE `id`=" . $groupId;
@@ -113,7 +113,31 @@ class ModelVideoChannel extends Model {
 
 
 	public function createVideo(array $param = array()) {
+		$queryArray = array();
 
+		$queryArray[] = isset($param['name']) ? "'" . $this->db->escape(strval($param['name'])) . "'" : "NULL";
+		$queryArray[] = isset($param['description']) ? "'" . $this->db->escape(strval($param['description'])) . "'" : "NULL";
+		$queryArray[] = isset($param['featured']) ? intval($param['name']) : 0;
+		$queryArray[] = isset($param['customerLink']) ? "'" . $this->db->escape(strval($param['customerLink'])) . "'" : "NULL";
+		$queryArray[] = isset($param['channelLink']) ? "'" . $this->db->escape(strval($param['channelLink'])) . "'" : "NULL";
+		$queryArray[] = isset($param['thumbnailId']) ? intval($param['thumbnailId']) : "NULL";
+		$queryArray[] = isset($param['customerId']) ? intval($param['customerId']) : "NULL";
+
+		$query = "INSERT INTO " . $this->_table . "(
+			`name`,
+			`description`,
+			`videoStatus`,
+			`featured`,
+			`customerLink`,
+			`channelLink`,
+			`thumbnailId`,
+			`customerId`
+			) VALUES (" . implode(",", $queryArray) . ")";
+
+		$this->db->query($query);
+		$videoId = $this->db->getLastId();
+
+		return $videoId;
 	}
 
 
