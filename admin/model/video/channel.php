@@ -11,7 +11,16 @@ class ModelVideoChannel extends Model {
 
 
 	public function createGroup(array $param = array()) {
+		$name = isset($param['name']) ? strval($param['name']) : NULL;
+		$description = isset($param['description']) ? strval($param['description']) : NULL;
 
+		$query = "INSERT INTO " . $this->_groupsTable . "(`name`, `description`) VALUES (";
+		$query .= is_null($name) ? "NULL, " : $this->db->escape($name) . ", ";
+		$query .= is_null($description) ? "NULL, " : $this->db->escape($description) . ")";
+
+		$this->db->query($query);
+
+		return $this->db->getLastId();
 	}
 
 
@@ -65,7 +74,7 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function setFeatured(int $videoId, bool $featured = TRUE) {
+	public function setFeatured(int $videoId, $featured = TRUE) {
 
 	}
 
@@ -81,7 +90,7 @@ class ModelVideoChannel extends Model {
 
 
 
-	public function setVideoStatus(int $videoId, string $videoStatus = 'new') {
+	public function setVideoStatus(int $videoId, $videoStatus = 'new') {
 
 	}
 }
