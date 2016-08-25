@@ -53,7 +53,18 @@ class ModelVideoChannel extends Model {
 
 
 	public function getGroup(int $groupId) {
+		$result = $this->db
+			->query(
+				"SELECT " .
+					"`id`,
+					`name`,
+					`description`
+				FROM " . $this->_groupsTable
+				. " WHERE `id`=" . $groupId
+				. " LIMIT 1"
+				);
 
+		return isset($result->row) ? $result->row : false;
 	}
 
 
