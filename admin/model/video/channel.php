@@ -362,11 +362,5 @@ class ModelVideoChannel extends Model {
 		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId . " AND `groupId`=" . $groupId . " LIMIT 1");
 		return;
 	}
-
-
-
-	public function setVideoStatus(int $videoId, $videoStatus = 'new') {
-
-	}
 }
 ?>
