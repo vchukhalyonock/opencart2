@@ -117,6 +117,7 @@ class ModelVideoChannel extends Model {
 
 		$queryArray[] = isset($param['name']) ? "'" . $this->db->escape(strval($param['name'])) . "'" : "NULL";
 		$queryArray[] = isset($param['description']) ? "'" . $this->db->escape(strval($param['description'])) . "'" : "NULL";
+		$queryArray[] = isset($param['videoStatus']) ? "'" . $this->db->escape(strval($param['videoStatus'])) . "'" : "'new'";
 		$queryArray[] = isset($param['featured']) ? intval($param['name']) : 0;
 		$queryArray[] = isset($param['customerLink']) ? "'" . $this->db->escape(strval($param['customerLink'])) . "'" : "NULL";
 		$queryArray[] = isset($param['channelLink']) ? "'" . $this->db->escape(strval($param['channelLink'])) . "'" : "NULL";
@@ -143,7 +144,49 @@ class ModelVideoChannel extends Model {
 
 
 	public function updateVideo(array $param = array()) {
+		if(!isset($param['id']))
+			return false;
 
+		$queryArray = array();
+
+		if(array_key_exists('name', $param)) {
+			$queryArray[] = is_null($param['name']) ? "`name`=NULL" : "`name`='" . $this->db->escape(strval($param['name'])) . "'";
+		}
+
+		if(array_key_exists('description', $param)) {
+			$queryArray[] = is_null($param['description']) ? "`description`=NULL" : "`description`='"
+				. $this->db->escape(strval($param['description'])) . "'";
+		}
+
+		if(array_key_exists('videoStatus', $param) && !is_null($param['videoStatus'])) {
+			$queryArray[] = "`videoStatus`='" . $this->db->escape(strval($param['videoStatus'])) . "'";
+		}
+
+		if(array_key_exists('featured', $param)) {
+			$queryArray[] = "`featured`=" . intval($param['featured']);
+		}
+
+		if(array_key_exists('customerLink', $param)) {
+			$queryArray[] = is_null($param['customerLink']) ? "`customerLink`=NULL" : "`customerLink`='"
+				. $this->db->escape(strval($param['customerLink'])) . "'";
+		}
+
+		if(array_key_exists('channelLink', $param)) {
+			$queryArray[] = is_null($param['channelLink']) ? "`channelLink`=NULL" : "`channelLink`='"
+				. $this->db->escape(strval($param['channelLink'])) . "'";
+		}
+
+		if(array_key_exists('thumbnailId', $param)) {
+			$queryArray[] = is_null($param['thumbnailId']) ? "`thumbnailId`=NULL" : "`thumbnailId`=" . intval($param['thumbnailId']);
+		}
+
+		if(array_key_exists('customerId', $param)) {
+			$queryArray[] = is_null($param['customerId']) ? "`customerId`=NULL" : "`customerId`=" . intval($param['customerId']);
+		}
+
+		$query = "UPDATE `" . $this->_table . "` SET " . implode(",", $queryArray) . " WHERE `id`=" . intval($param['id']);
+
+		return true;
 	}
 
 
