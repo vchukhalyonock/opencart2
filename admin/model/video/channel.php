@@ -334,6 +334,14 @@ class ModelVideoChannel extends Model {
 	}
 
 
+	public function isVideoAssoc(int $videoId, int $groupId) {
+		$res = $this->db->query(
+			"SELECT `groupId`, `videoId` FROM " . $this->_groupsAssocTable
+				. " WHERE `groupId`=" . $groupId . " AND `videoId`=" .  $videoId . " LIMIT 1");
+		return $res->num_rows > 0 ? 1 : 0;
+	}
+
+
 	public function setFeatured(int $videoId, $featured = TRUE) {
 
 	}
