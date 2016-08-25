@@ -1,4 +1,39 @@
 <?php
+if ( !function_exists('getYoutubeVideoInfoUrl') ) {
+	/**
+	 * @param $video_id
+	 * @return string
+	 */
+	function getYoutubeVideoInfoUrl($video_id)
+	{
+		return "http://www.youtube.com/get_video_info?&video_id={$video_id}&asv=3&el=detailpage&hl=en_US";
+	}
+}
+
+
+if ( !function_exists('getYoutubeVideoByType') ) {
+	/**
+	 * @param array $stream_data
+	 * @param string $video_type
+	 * @return bool
+	 */
+	function getYoutubeVideoByType(array $stream_data = array(), $video_type = '')
+	{
+		if ( count($stream_data) == 0 OR $video_type == '' ) {
+			return FALSE;
+		}
+
+		// search for video with specified type
+		foreach ( $stream_data as $item ) {
+			parse_str($item, $itemData);
+			$types = explode(';', $itemData['type']);
+			if ( $types[0] == $video_type ) return $itemData;
+		}
+
+		return FALSE;
+	}
+}
+
 if ( !function_exists('getYoutubeVideoInfoContent') ) {
 	/**
 	 * @param $video_id
@@ -71,55 +106,61 @@ if ( !function_exists('downloadFromYoutube') ) {
 	 * @param string $video_id
 	 * @param string $youtube_id
 	 * @param string $video_type
-	 * @return bool|mixed
+	 * @return bool
 	 */
 	function downloadFromYoutube($video_id = '', $youtube_id = '', $video_type = 'video/mp4')
 	{
-		$dataToSend = array();
-		$dataToSend['video_id'] = $video_id;
-		$dataToSend['youtube_id'] = $youtube_id;
-		$dataToSend['video_type'] = $video_type;
+		$CI = get_instance();
+		$CI->load->helper('eventlog');
+		$CI->config->load('main');
 
-		$temp = tmpfile();
-		fwrite($temp, json_encode($dataToSend));
-		fseek($temp, 0);
-
-		// generate request for user api service
-		$request = curl_init();
-
-		curl_setopt_array($request, array(
-			CURLOPT_URL => $api_url . $api_video_path,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_PUT => true,
-			CURLOPT_BINARYTRANSFER => true,
-			CURLOPT_UPLOAD => true,
-			CURLOPT_INFILE => $temp,
-			CURLOPT_INFILESIZE, strlen(json_encode($dataToSend)),
-		));
-
-		$response = curl_exec($request);
-		fclose($temp);
-
-		if ( curl_getinfo($request, CURLINFO_HTTP_CODE) === 200 ) {
-
-			$json = json_decode($response, true);
-			curl_close($request);
-
-			if ( $json == null ) {
-				return false;
-			}
-
-			if ( $json['status'] != true ) {
-				return false;
-			}
-
-		} else {
-			curl_close($request);
-			return false;
+		if ( $video_id == '' ) {
+			return FALSE;
 		}
 
-		return $json;
+		if ( $youtube_id == '' ) {
+			return FALSE;
+		}
+
+		// get youtube video info
+		if ( FALSE === $video_info = file_get_contents(getYoutubeVideoInfoUrl($youtube_id)) ) {
+			return FALSE;
+		}
+
+		parse_str($video_info, $parsed_video_info);
+
+		if ( strtolower($parsed_video_info['status']) == 'fail' ) {
+			return FALSE;
+		}
+
+		$stream_data = explode(',', $parsed_video_info['url_encoded_fmt_stream_map']);
+
+		if ( count($stream_data) == 0 ) {
+			return FALSE;
+		}
+
+		// get youtube video info
+		if ( FALSE === $video_stream_item = getYoutubeVideoByType($stream_data, $video_type) ) {
+			return FALSE;
+		}
+
+		$mimeTypes = explode('/', $video_type);
+		$extension = $mimeTypes[1];
+		$final_upload_path = DIR_VIDEO . $video_id . '.' . $extension;
+
+		if ( !is_dir($final_upload_path) ) {
+			if ( FALSE === writeVideoFromYoutube(
+					$final_upload_path,
+					$video_stream_item['url']
+				)
+			) {
+				return FALSE;
+			} else {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }
 
