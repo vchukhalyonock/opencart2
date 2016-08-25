@@ -343,7 +343,9 @@ class ModelVideoChannel extends Model {
 
 
 	public function setFeatured(int $videoId, $featured = TRUE) {
-
+		$featured = ($featured) ? 1 : 0;
+		$this->db->query("UPDATE " . $this->_table . " SET `featured`=" . $featured . " WHERE `id`=" . $videoId);
+		return;
 	}
 
 
