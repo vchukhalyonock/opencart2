@@ -61,3 +61,6 @@ define("YOUTUBE_APPLICATION_NAME", "Test Name");
 define("YOUTUBE_CLIENT_SECRET", "");
 define("YOUTUBE_CLIENT_ID", "");
 
+//PAGINATION
+define("ITEMS_ON_PAGE", 20);
+
