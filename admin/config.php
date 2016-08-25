@@ -29,3 +29,9 @@ define('DB_PASSWORD', 'htpthdfwbz');
 define('DB_DATABASE', 'opencart');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
+
+//ORDERING
+define('ORDER_ASC', 1 << 0);
+define('ORDER_DESC', 1 << 1);
+define('ORDER_BY_ID', 1 << 2);
+define('ORDER_BY_NAME', 1 << 3);
