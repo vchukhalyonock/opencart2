@@ -8,6 +8,7 @@ class ModelVideoChannel extends Model {
 	private $_table = 'oc_videos';
 	private $_groupsTable = 'oc_videos_groups';
 	private $_groupsAssocTable = 'co_videos_groups_assoc';
+	private $_customerTable = 'customer';
 
 
 	public function createGroup(array $param = array()) {
@@ -192,7 +193,26 @@ class ModelVideoChannel extends Model {
 
 
 	public function getVideo(int $videoId) {
+		$result = $this->db->query(
+			"SELECT "
+				. $this->_table . ".id AS id,"
+				. $this->_table . ".name AS name,"
+				. $this->_table . ".description AS description,"
+				. $this->_table . ".videoStatus AS videoStatus,"
+				. $this->_table . ".featured AS featured,"
+				. $this->_table . ".customerLink AS customerLink,"
+				. $this->_table . ".channelLink AS channelLink,"
+				. $this->_table . ".thumbnailId AS thumbnailId,"
+				. $this->_table . ".customerId AS customerId,"
+				. DB_PREFIX . $this->_customerTable . ".email AS email "
+			. "LEFT JOIN "
+				. DB_PREFIX . $this->_customerTable
+				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . $this->_table . ".customerId "
+			. "WHERE " . $this->_table . ".id=" . $videoId
+			. " LIMIT 1"
+			);
 
+		return isset($result->row) ? $result->row : false;
 	}
 
 
