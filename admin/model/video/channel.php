@@ -350,7 +350,11 @@ class ModelVideoChannel extends Model {
 
 
 	public function groupVideoAssoc(int $videoId, int $groupId) {
+		if($this->isVideoAssoc($videoId, $groupId) == 1)
+			return;
 
+		$this->db->query("INSERT INTO " . $this->_groupsAssocTable . "(`groupId`, `videoId`) VALUES (" . $groupId . ", " . $videoId . ")");
+		return;
 	}
 
 
