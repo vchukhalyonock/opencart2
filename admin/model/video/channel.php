@@ -26,7 +26,29 @@ class ModelVideoChannel extends Model {
 
 
 	public function updateGroup(array $param = array()) {
+		if(!isset($param['id']))
+			return false;
 
+		$queryArray = array();
+
+		$groupId = intval($param['groupId']);
+
+		if(array_key_exists('name', $param) || array_key_exists('description', $param)) {
+			if(array_key_exists('name', $param)) {
+				$name = isset($param['name']) ? strval($param['name']) : NULL;
+				$queryArray[] = is_null($name) ? "`name`=NULL, " : "`name`=" . $this->db->escape($name);
+			}
+
+			if(array_key_exists('description', $param)) {
+				$name = isset($param['description']) ? strval($param['description']) : NULL;
+				$queryArray[] = is_null($description) ? "`description`=NULL, " : "`description`=" . $this->db->escape($description);
+			}
+
+			$query = "UPDATE " . $this->_groupsTable . " SET " . implode(",", $queryArray) . " WHERE `id`=" . $groupId;
+			$this->db->query($query);
+		}
+
+		return true;
 	}
 
 
