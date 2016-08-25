@@ -50,3 +50,7 @@ define("UPLOADED", 1 << 4);
 define("DOWNLOADED", 1 << 5);
 define("ERRORS", 1 << 6);
 define("READY", 1 << 7);
+
+
+//YOUTUBE
+define("YOUTUBE_CLIENT_KEY", "");
