@@ -327,7 +327,10 @@ class ModelVideoChannel extends Model {
 
 
 	public function geleteVideo(int $videoId) {
+		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId);
+		$this->db->query("DELETE FROM " . $this->_table . " WHERE `id`=" . $videoId);
 
+		return;
 	}
 
 
