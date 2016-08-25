@@ -82,7 +82,7 @@ class ModelVideoChannel extends Model {
 		else
 			$orderField = "`id` ";
 
-		$query = "SELECT SQL_CALC_FOUND ROWS "
+		$query = "SELECT SQL_CALC_FOUND_ROWS "
 			. "`id`,
 				`name`
 				`description`"
@@ -217,8 +217,112 @@ class ModelVideoChannel extends Model {
 
 
 
-	public function getAllVideos(int $groupId = null) {
+	public function getAllVideos(
+			int $groupId = null,
+			string $search = null,
+			string $select = null,
+			$order = 5,
+			$start = 0,
+			$limit = 0) {
+		$order = intval($order);
+		$start = intval($start);
+		$limit = intval($limit);
 
+		$whereArray = array();
+
+		$orderDirection = $order & ORDER_ASC ? "ASC" : "DESC";
+		if($order & ORDER_BY_NAME) {
+			$orderField = "name ";
+		}
+		elseif($order & ORDER_BY_EMAIL) {
+			$orderField = "email ";
+		}
+		elseif($order & ORDER_BY_STATUS) {
+			$orderField = "videoStatus ";
+		}
+		elseif($order & ORDER_BY_FEATURED) {
+			$orderField = "featured ";
+		}
+		else
+			$orderField = "id ";
+
+		$query = "SELECT SQL_CALC_FOUND_ROWS "
+			. $this->_table . ".id AS id,"
+			. $this->_table . ".name AS name,"
+			. $this->_table . ".description AS description,"
+			. $this->_table . ".videoStatus AS videoStatus,"
+			. $this->_table . ".featured AS featured,"
+			. $this->_table . ".customerLink AS customerLink,"
+			. $this->_table . ".channelLink AS channelLink,"
+			. $this->_table . ".thumbnailId AS thumbnailId,"
+			. $this->_table . ".customerId AS customerId,"
+			. DB_PREFIX . $this->_customerTable . ".email AS email "
+			. "LEFT JOIN "
+				. DB_PREFIX . $this->_customerTable
+				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . $this->_table . ".customerId ";
+
+		if(!is_null($groupId)) {
+			$query .= " LEFT JOIN " . $this->_groupsAssocTable . " ON " . $this->_groupsAssocTable . ".videoId = " . $this->_table . ".id ";
+		}
+
+
+		//WHERE part
+		if(!is_null($select)) {
+			if($select & RECENT) {
+				$whereArray[] = $this->_table . ".videoStatus='new'";
+			}
+			elseif ($select & FEATURED) {
+				$whereArray[] = $this->_table . ".featured=1";
+			}
+			elseif ($select & TO_DOWNLOAD) {
+				$whereArray[] = $this->_table . ".videoStatus='download'";
+			}
+			elseif ($select & TO_UPLOAD) {
+				$whereArray[] = $this->_table . ".videoStatus='upload'";
+			}
+			elseif ($select & UPLOADED) {
+				$whereArray[] = $this->_table . ".videoStatus='not_ready'";
+			}
+			elseif ($select & DOWNLOADED) {
+				$whereArray[] = $this->_table . ".videoStatus='downloaded'";
+			}
+			elseif ($select & ERRORS) {
+				$whereArray[] = $this->_table . ".videoStatus IN ('err_download', 'err_upload')";
+			}
+			elseif ($select & READY) {
+				$whereArray[] = $this->_table . ".videoStatus='ready'";
+			}
+		}
+
+		if(!is_null($groupId)) {
+			$whereArray[] = $this->_groupsAssocTable . ".groupId = " . $groupId;
+		}
+
+		if(!is_null($search)) {
+			$search = "'" . $this->db->escape("%" . $search . "%") . "'";
+			$whereArray[] = "("
+				. $this->_table . ".name LIKE ({$search}) OR "
+				. $this->_table . ".description LIKE ({$search}) OR "
+				. $this->_table . ".videoStatus LIKE ({$search}) OR "
+				. DB_PREFIX . $this->_customerTable . ".email LIKE ({$search}) )";
+		}
+
+		$query .= implode(" AND ", $whereArray)
+			. " ORDER_BY " . $orderField . $orderDirection;
+
+		if($limit > 0) {
+			$query .= " LIMIT " . $start . ", " . $limit;
+		}
+
+		$res = $this->db->query($query);
+		$allResult = $this->db->query("SELECT FOUND_ROWS AS rows");
+
+		$result = array(
+			'result' => $res->rows,
+			'total' => $allResult->row['rows']
+			);
+
+		return $result;
 	}
 
 
