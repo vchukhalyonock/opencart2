@@ -35,3 +35,6 @@ define('ORDER_ASC', 1 << 0);
 define('ORDER_DESC', 1 << 1);
 define('ORDER_BY_ID', 1 << 2);
 define('ORDER_BY_NAME', 1 << 3);
+define('ORDER_BY_EMAIL', 1 << 4);
+define('ORDER_BY_STATUS', 1 << 5);
+define('ORDER_BY_FEATURED' 1 << 6);
