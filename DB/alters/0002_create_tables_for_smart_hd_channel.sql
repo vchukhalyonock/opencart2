@@ -7,7 +7,7 @@ CREATE TABLE `oc_videos_groups` (
   `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -39,7 +39,7 @@ ALTER TABLE `oc_videos_groups`
 --
 
 DROP TABLE IF EXISTS `oc_videos`;
-CREATE TABLE `videos` (
+CREATE TABLE `oc_videos` (
   `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
@@ -49,7 +49,7 @@ CREATE TABLE `videos` (
   `channelLink` varchar(255) DEFAULT NULL,
   `thumbnailID` int(11) DEFAULT NULL,
   `customerId` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -77,11 +77,6 @@ ALTER TABLE `oc_videos`
 -- Constraints for dumped tables
 --
 
---
--- Constraints for table `videos`
---
-ALTER TABLE `oc_videos`
-  ADD CONSTRAINT `fk_videos_siteUserId` FOREIGN KEY (`customerId`) REFERENCES `oc_customer` (`customer_id`) ON DELETE SET NULL ON UPDATE NO ACTION;
 
 
 
@@ -94,7 +89,7 @@ DROP TABLE IF EXISTS `oc_videos_groups_assoc`;
 CREATE TABLE `oc_videos_groups_assoc` (
   `videoId` int(11) NOT NULL,
   `groupId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -104,17 +99,5 @@ CREATE TABLE `oc_videos_groups_assoc` (
 -- Indexes for table `videosGroupsAssoc`
 --
 ALTER TABLE `oc_videos_groups_assoc`
-  ADD UNIQUE KEY `groupId_UNIQUE` (`groupId`,`videoId`),
-  ADD KEY `fk_videosAssoc_videoId_idx` (`videoId`),
-  ADD KEY `fk_videosAssoc_groupId_idx` (`groupId`);
+  ADD UNIQUE KEY `groupId_UNIQUE` (`groupId`,`videoId`);
 
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `videosGroupsAssoc`
---
-ALTER TABLE `oc_videos_groups_assoc`
-  ADD CONSTRAINT `fk_videosAssoc_groupId` FOREIGN KEY (`groupId`) REFERENCES `oc_videos_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_videosAssoc_videoId` FOREIGN KEY (`videoId`) REFERENCES `oc_videos` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
