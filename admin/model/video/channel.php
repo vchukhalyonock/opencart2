@@ -69,8 +69,38 @@ class ModelVideoChannel extends Model {
 
 
 
-	public function getAllGroups() {
+	public function getAllGroups($order = 5, $start = 0, $limit = 0) {
+		$order = intval($order);
+		$start = intval($start);
+		$limit = intval($limit);
 
+		$orderDirection = $order & ORDER_ASC ? 'ASC' : 'DESC';
+		if($order & ORDER_BY_NAME) {
+			$orderField = "`name` ";
+		}
+		else
+			$orderField = "`id` ";
+
+		$query = "SELECT SQL_CALC_FOUND ROWS "
+			. "`id`,
+				`name`
+				`description`"
+			. "FROM " . $this->_groupsTable
+			. " ORDER_BY " . $orderField . $orderDirection;
+
+		if($limit > 0)
+			$query .= " LIMIT " . $start . ", " . $limit;
+
+		$res = $this->db->query($query);
+
+		$allResult = $this->db->query("SELECT FOUND_ROWS AS rows");
+
+		$result = array(
+			'result' => $res->rows,
+			'total' => $allResult->row['rows']
+			);
+
+		return $result;
 	}
 
 
