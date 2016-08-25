@@ -38,3 +38,15 @@ define('ORDER_BY_NAME', 1 << 3);
 define('ORDER_BY_EMAIL', 1 << 4);
 define('ORDER_BY_STATUS', 1 << 5);
 define('ORDER_BY_FEATURED' 1 << 6);
+
+
+
+//VIDEO
+define("RECENT", 1 << 0);
+define("FEATURED", 1 << 1);
+define("TO_DOWNLOAD", 1 << 2);
+define("TO_UPLOAD", 1 << 3);
+define("UPLOADED", 1 << 4);
+define("DOWNLOADED", 1 << 5);
+define("ERRORS", 1 << 6);
+define("READY", 1 << 7);
