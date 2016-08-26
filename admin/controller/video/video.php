@@ -23,9 +23,9 @@ class ControllerVideoVideo extends Controller {
 
 		$page = isset($this->request->get['page'])
 			? $this->request->get['page']
-			: 0;
+			: 1;
 
-		$startVideo = $page * ITEMS_ON_PAGE;
+		$startVideo = ($page - 1) * $this->config->get('config_limit_admin');
 
 		$data['order'] = isset($this->request->get['order'])
 			? $this->request->get['order']
@@ -35,7 +35,7 @@ class ControllerVideoVideo extends Controller {
 			? $this->request->get['groupId']
 			: null;
 
-		$url = '&page=' . $page;
+		$url = '';
 
 		if(isset($data['select_status'])) {
 			$url .= "&select_status=" . $data['select_status'];
@@ -75,16 +75,28 @@ class ControllerVideoVideo extends Controller {
 				$data['select_status'],
 				$data['order'],
 				$startVideo,
-				ITEMS_ON_PAGE
+				$this->config->get('config_limit_admin')
 				);
 
 		$pagination = new Pagination();
 		$pagination->total = $data['videos']['total'];
 		$pagination->page = $page;
-		$pagination->limit = ITEMS_ON_PAGE;
+		$pagination->limit = $this->config->get('config_limit_admin');
 		$pagination->url = $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url . '&page={page}', true);
 
 		$data['pagination'] = $pagination->render();
+
+		$data['results'] =
+			sprintf(
+				$this->language->get('text_pagination'),
+				($data['videos']['total'])
+					? (($page - 1) * $this->config->get('config_limit_admin')) + 1
+					: 0,
+				((($page - 1) * $this->config->get('config_limit_admin')) > ($data['videos']['total'] - $this->config->get('config_limit_admin')))
+					? $data['videos']['total']
+					: ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')),
+					$data['videos']['total'], ceil($data['videos']['total'] / $this->config->get('config_limit_admin'))
+			);
 
 		$data['heading_title'] = $this->language->get('heading_title');
 
