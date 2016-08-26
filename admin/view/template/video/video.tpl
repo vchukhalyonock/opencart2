@@ -25,6 +25,7 @@
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
+                 <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" 	/></td>
                   <td class="text-center"><?php if ($order & ORDER_BY_ID) { ?>
                   	<a href="<?php echo $order_id; ?>" class="id"><?php echo $column_id?></a>
                   	<?php } else {?>
@@ -63,6 +64,11 @@
               <tbody>
               	<?php foreach($videos['result'] as $video):?>
               		<tr>
+              			<td class="text-center"><?php if (in_array($video['id'], $selected)) { ?>
+                    	<input type="checkbox" name="selected[]" value="<?php echo $video['id']; ?>" checked="checked" />
+                    	<?php } else { ?>
+                    	<input type="checkbox" name="selected[]" value="<?php echo $video['id']; ?>" />
+                    	<?php } ?></td>
               			<td class="text-center"><?php echo $video['id']?></td>
               			<td class="text-center"><?php echo $video['email']?></td>
               			<td class="text-center"><?php echo $video['name']?></td>
