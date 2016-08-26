@@ -88,7 +88,7 @@ class ControllerVideoVideo extends Controller {
 		$data['add'] = $this->url->link('video/video/add', 'token=' . $this->session->data['token'] . $url, true);
 		$data['delete'] = $this->url->link('video/video/delete', 'token=' . $this->session->data['token'] . $url, true);
 
-		$data['videos'] = $this->model_video_channel
+		$allVideos = $this->model_video_channel
 			->getAllVideos(
 				$data['group_id'],
 				$data['search_string'],
@@ -97,6 +97,17 @@ class ControllerVideoVideo extends Controller {
 				$startVideo,
 				$this->config->get('config_limit_admin')
 				);
+
+		foreach ($allVideos['result'] as $video) {
+			
+			$data['videos']['result'][] = array_merge($video, 
+				array(
+					'edit' => $this->url->link('video/video/edit', 'token=' . $this->session->data['token'] . '&video_id=' . $video['id'] . $url, true)
+				)
+			);
+		}
+
+		$data['videos']['total'] = $allVideos['total'];
 
 		$pagination = new Pagination();
 		$pagination->total = $data['videos']['total'];

@@ -70,7 +70,9 @@
               			<td class="text-center"><?php echo $video['featured']?></td>
               			<td class="text-center"><?php echo $video['customerLink']?></td>
               			<td class="text-center"><?php echo $video['channelLink']?></td>
-              			<td class="text-center"></td>
+              			<td class="text-center">
+              				<a href="<?php echo $video['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+              			</td>
               		</tr>
               	<?php endforeach;?>
               </tbody>
