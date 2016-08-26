@@ -2,7 +2,7 @@
 class ControllerVideoVideo extends Controller {
 
 	public function index() {
-		$this->load->language('module/video');
+		$this->load->language('video/video');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -85,6 +85,29 @@ class ControllerVideoVideo extends Controller {
 		$pagination->url = $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url . '&page={page}', true);
 
 		$data['pagination'] = $pagination->render();
+
+		$data['heading_title'] = $this->language->get('heading_title');
+
+		$data['button_approve'] = $this->language->get('button_approve');
+		$data['button_add'] = $this->language->get('button_add');
+		$data['button_edit'] = $this->language->get('button_edit');
+		$data['button_delete'] = $this->language->get('button_delete');
+		$data['button_filter'] = $this->language->get('button_filter');
+		$data['button_login'] = $this->language->get('button_login');
+		$data['button_unlock'] = $this->language->get('button_unlock');
+
+		$data['text_list'] = $this->language->get('text_list');
+
+		$data['column_id'] = $this->language->get('column_id');
+		$data['column_email'] = $this->language->get('column_email');
+		$data['column_name'] = $this->language->get('column_name');
+		$data['column_status'] = $this->language->get('column_status');
+		$data['column_featured'] = $this->language->get('column_featured');
+		$data['column_customer_link'] = $this->language->get('column_customer_link');
+		$data['column_channel_id'] = $this->language->get('column_channel_id');
+		$data['column_actions'] = $this->language->get('column_actions');
+
+		$data['token'] = $this->session->data['token'];
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
