@@ -1,5 +1,5 @@
 <?php
-class ControllerModuleVideo extends Controller {
+class ControllerVideoVideo extends Controller {
 
 	public function index() {
 		$this->load->language('module/video');
