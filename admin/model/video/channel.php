@@ -87,14 +87,14 @@ class ModelVideoChannel extends Model {
 				`name`
 				`description`"
 			. "FROM " . $this->_groupsTable
-			. " ORDER_BY " . $orderField . $orderDirection;
+			. " ORDER BY " . $orderField . $orderDirection;
 
 		if($limit > 0)
 			$query .= " LIMIT " . $start . ", " . $limit;
 
 		$res = $this->db->query($query);
 
-		$allResult = $this->db->query("SELECT FOUND_ROWS AS rows");
+		$allResult = $this->db->query("SELECT FOUND_ROWS() AS rows");
 
 		$result = array(
 			'result' => $res->rows,
@@ -205,7 +205,8 @@ class ModelVideoChannel extends Model {
 				. $this->_table . ".thumbnailId AS thumbnailId,"
 				. $this->_table . ".customerId AS customerId,"
 				. DB_PREFIX . $this->_customerTable . ".email AS email "
-			. "LEFT JOIN "
+			. "FROM " . $this->_table
+			. " LEFT JOIN "
 				. DB_PREFIX . $this->_customerTable
 				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . $this->_table . ".customerId "
 			. "WHERE " . $this->_table . ".id=" . $videoId
@@ -257,7 +258,8 @@ class ModelVideoChannel extends Model {
 			. $this->_table . ".thumbnailId AS thumbnailId,"
 			. $this->_table . ".customerId AS customerId,"
 			. DB_PREFIX . $this->_customerTable . ".email AS email "
-			. "LEFT JOIN "
+			. "FROM " . $this->_table
+			. " LEFT JOIN "
 				. DB_PREFIX . $this->_customerTable
 				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . $this->_table . ".customerId ";
 
@@ -308,14 +310,14 @@ class ModelVideoChannel extends Model {
 		}
 
 		$query .= implode(" AND ", $whereArray)
-			. " ORDER_BY " . $orderField . $orderDirection;
+			. " ORDER BY " . $orderField . $orderDirection;
 
 		if($limit > 0) {
 			$query .= " LIMIT " . $start . ", " . $limit;
 		}
 
 		$res = $this->db->query($query);
-		$allResult = $this->db->query("SELECT FOUND_ROWS AS rows");
+		$allResult = $this->db->query("SELECT FOUND_ROWS() AS rows");
 
 		$result = array(
 			'result' => $res->rows,
