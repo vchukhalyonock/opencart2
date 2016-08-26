@@ -25,11 +25,36 @@
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <td class="text-center"><?php echo $column_id?></td>
-                  <td class="text-center"><?php echo $column_email?></td>
-                  <td class="text-center"><?php echo $column_name?></td>
-                  <td class="text-center"><?php echo $column_status?></td>
-                  <td class="text-center"><?php echo $column_featured?></td>
+                  <td class="text-center"><?php if ($order & ORDER_BY_ID) { ?>
+                  	<a href="<?php echo $order_id; ?>" class="id"><?php echo $column_id?></a>
+                  	<?php } else {?>
+                  	<a href="<?php echo $order_id; ?>"><?php echo $column_id?></a>
+                  	<?php }?>
+                  </td>
+                   <td class="text-center"><?php if ($order & ORDER_BY_EMAIL) { ?>
+                  	<a href="<?php echo $order_email; ?>" class="email"><?php echo $column_email?></a>
+                  	<?php } else {?>
+                  	<a href="<?php echo $order_email; ?>"><?php echo $column_email?></a>
+                  	<?php }?>
+                  </td>
+                  <td class="text-center"><?php if ($order & ORDER_BY_NAME) { ?>
+                  	<a href="<?php echo $order_name; ?>" class="name"><?php echo $column_name?></a>
+                  	<?php } else {?>
+                  	<a href="<?php echo $order_name; ?>"><?php echo $column_name?></a>
+                  	<?php }?>
+                  </td>
+                   <td class="text-center"><?php if ($order & ORDER_BY_STATUS) { ?>
+                  	<a href="<?php echo $order_status; ?>" class="status"><?php echo $column_status?></a>
+                  	<?php } else {?>
+                  	<a href="<?php echo $order_status; ?>"><?php echo $column_status?></a>
+                  	<?php }?>
+                  </td>
+                   <td class="text-center"><?php if ($order & ORDER_BY_FEATURED) { ?>
+                  	<a href="<?php echo $order_featured; ?>" class="name"><?php echo $column_featured?></a>
+                  	<?php } else {?>
+                  	<a href="<?php echo $order_featured; ?>"><?php echo $column_featured?></a>
+                  	<?php }?>
+                  </td>
                   <td class="text-center"><?php echo $column_customer_link?></td>
                   <td class="text-center"><?php echo $column_channel_id?></td>
                   <td class="text-center"><?php echo $column_actions?></td>

@@ -75,7 +75,7 @@ class ModelVideoChannel extends Model {
 		$start = intval($start);
 		$limit = intval($limit);
 
-		$orderDirection = $order & ORDER_ASC ? 'ASC' : 'DESC';
+		$orderDirection = $order & ORDER_DESC ? 'DESC' : 'ASC';
 		if($order & ORDER_BY_NAME) {
 			$orderField = "`name` ";
 		}
@@ -231,7 +231,7 @@ class ModelVideoChannel extends Model {
 
 		$whereArray = array();
 
-		$orderDirection = $order & ORDER_ASC ? "ASC" : "DESC";
+		$orderDirection = $order & ORDER_DESC ? "DESC" : "ASC";
 		if($order & ORDER_BY_NAME) {
 			$orderField = "name ";
 		}

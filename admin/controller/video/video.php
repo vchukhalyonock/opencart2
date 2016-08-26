@@ -45,6 +45,26 @@ class ControllerVideoVideo extends Controller {
 			$url .= "&search_string=" . $data['search_string'];
 		}
 
+		if(isset($data['groupId'])) {
+			$url .= "&group_id=" . $data['group_id'];
+		}
+
+		$data['order_id'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_ID . $url, true);
+		$data['order_email'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_EMAIL . $url, true);
+		$data['order_name'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_NAME . $url, true);
+		$data['order_featured'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . (ORDER_BY_FEATURED | ORDER_DESC) . $url, true);
+		$data['order_status'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_STATUS . $url, true);
+
+		$url = '';
+
+		if(isset($data['select_status'])) {
+			$url .= "&select_status=" . $data['select_status'];
+		}
+
+		if(isset($data['search_string'])) {
+			$url .= "&search_string=" . $data['search_string'];
+		}
+
 		if(isset($data['order'])) {
 			$url .= "&order=" . $data['order'];
 		}
