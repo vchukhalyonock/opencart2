@@ -293,5 +293,57 @@ class ControllerVideoVideo extends Controller {
 
 		$this->response->setOutput($this->load->view('video/video_form', $data));
 	}
+
+
+	public function getYoutubeContent() {
+		if(isset($this->request->get['video_id'])) {
+			$videoId = $this->request->get['video_id'];
+			$content = getYoutubeVideoInfoContent(strval($videoId));
+			$this->response->setOutput($content);
+		}
+		else {
+			$this->response->setOutput(json_encode(array('result' => false)));
+		}
+
+
+
+		/*if(!$this->input->is_ajax_request())
+			redirect(base_url());
+
+		$videoId = $this->input->post('videoId', true);
+		if($videoId == false) {
+			$this->_ajaxResponse(
+				array(
+					'result' => false
+					)
+				);
+		}
+		else {
+			$content = getYoutubeVideoInfoContent(strval($videoId));
+			if(empty($content)) {
+				$this->_ajaxResponse(
+					array(
+						'result' => false
+						)
+					);
+			}
+			elseif(($conts = json_decode($content)) == false) {
+				$this->_ajaxResponse(
+					array(
+						'result' => false
+						)
+					);
+			}
+			else {
+				$this->_ajaxResponse(
+					array(
+						'result' => true,
+						'name' => $conts->items[0]->snippet->title,
+						'description' => $conts->items[0]->snippet->description
+						)
+					);
+			}
+		}*/
+	}
 }
 ?>
