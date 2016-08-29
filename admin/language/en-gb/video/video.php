@@ -18,3 +18,13 @@ $_['column_featured']		= 'Featured';
 $_['column_customer_link']	= 'Customer Link';
 $_['column_channel_id']		= 'Channel Id';
 $_['column_actions']		= 'Actions';
+
+
+//Entry
+$_['entry_status']			= 'Status';
+$_['entry_name']			= 'Name';
+$_['entry_description']		= 'Description';
+$_['entry_customer_link']	= 'Customer Link';
+$_['entry_channel_link']	= 'Channel Link';
+$_['entry_featured']		= 'Featured';
+

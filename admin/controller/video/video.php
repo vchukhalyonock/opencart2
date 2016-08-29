@@ -164,5 +164,70 @@ class ControllerVideoVideo extends Controller {
 
 		$this->response->setOutput($this->load->view('video/video', $data));
 	}
+
+
+	public function add() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+
+		$this->getVideoForm();
+	}
+
+
+	public function edit() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+
+		$this->getVideoForm();
+	}
+
+
+
+	public function getVideoForm() {
+		$data['heading_title'] = $this->language->get('heading_title');
+
+		$data['entry_status'] = $this->language->get('entry_status');
+		$data['entry_name'] = $this->language->get('entry_name');
+		$data['entry_description'] = $this->language->get('entry_description');
+		$data['entry_customer_link'] = $this->language->get('entry_customer_link');
+		$data['entry_channel_link'] = $this->language->get('entry_channel_link');
+		$data['entry_featured'] = $this->language->get('entry_featured');
+
+		$data['button_save'] = $this->language->get('button_save');
+		$data['button_cancel'] = $this->language->get('button_cancel');
+
+		$data['token'] = $this->session->data['token'];
+
+		$url = '';
+
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('heading_title'),
+			'href' => $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true)
+		);
+
+		$data['cancel'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true);
+
+
+		$data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+
+		$this->response->setOutput($this->load->view('video/video_form', $data));
+	}
 }
 ?>
