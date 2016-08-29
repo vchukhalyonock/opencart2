@@ -3,6 +3,7 @@
 	<div class="page-header">
 		<div class="container-fluid">
      		<div class="pull-right">
+				<button type="button" id="getyoutubeinfo" data-toggle="tooltip" title="<?php echo $button_get_content; ?>" class="btn btn-primary"><i class="fa fa-upload"></i></button>
         		<button type="submit" form="form-customer" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
         		<a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
         	</div>
@@ -41,14 +42,14 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="name"><?php echo $entry_name; ?></label>
 						<div class="col-sm-10">
-							<input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+							<input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_name; ?>" id="name" class="form-control" />
 						</div>
 					</div>
 
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="description"><?php echo $entry_description; ?></label>
 						<div class="col-sm-10">
-							<textarea name="description" placeholder="<?php echo $entry_description; ?>" id="description" class="form-control summernote">
+							<textarea name="description" placeholder="<?php echo $entry_description; ?>" id="description" class="form-control">
 								<?php echo $description;?>
 							</textarea>
 						</div>
@@ -57,7 +58,7 @@
 					<div class="form-group required">
 						<label class="col-sm-2 control-label" for="customer_link"><?php echo $entry_customer_link; ?></label>
 						<div class="col-sm-10">
-							<input type="text" name="customer_link" value="<?php echo $customer_link; ?>" placeholder="<?php echo $entry_customer_link; ?>" id="customer_link" class="form-control" />
+							<input type="text" name="customer_link" id="customer_link" value="<?php echo $customer_link; ?>" placeholder="<?php echo $entry_customer_link; ?>" id="customer_link" class="form-control" />
 						</div>
 					</div>
 
@@ -83,5 +84,25 @@
 			</div>
 		</div>
 	</div>
+<script type="text/javascript">
+	$("#getyoutubeinfo").click(function(e){
+        e.preventDefault();
+        var customerLink = $('#customer_link').val();
+        var parts = customerLink.split('=');
+        if(parts[1] != undefined) {
+            $.ajax ({
+                type: 'GET',
+                url: '/admin/index.php?route=video/video/getYoutubeContent&token=<?php echo $token?>&video_id=' + parts[1],
+                success : function(data){
+                    if(data.result == true) {
+                        $("#name").val(data.name);
+                        $('#description').text(data.description);
+                    }
+                },
+                dataType: 'json'
+            });
+        }
+    });
+</script>
 </div>
 <?php echo $footer; ?>

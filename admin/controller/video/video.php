@@ -213,6 +213,7 @@ class ControllerVideoVideo extends Controller {
 
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
+		$data['button_get_content'] = $this->language->get('button_get_content');
 
 		$data['token'] = $this->session->data['token'];
 

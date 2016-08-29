@@ -40,3 +40,5 @@ $_['status_error_upload']	= 'Error Upload';
 $_['status_error_download']	= 'Error Download';
 
 
+//Buttons
+$_['button_get_content'] = 'Get Video Content';
