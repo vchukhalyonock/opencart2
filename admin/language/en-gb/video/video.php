@@ -28,3 +28,15 @@ $_['entry_customer_link']	= 'Customer Link';
 $_['entry_channel_link']	= 'Channel Link';
 $_['entry_featured']		= 'Featured';
 
+
+//Statuses
+$_['status_new']			= 'New';
+$_['status_download']		= 'Download';
+$_['status_downloaded']		= 'Downloaded';
+$_['status_upload']			= 'Upload';
+$_['status_not_ready']		= 'Not Ready';
+$_['status_ready']			= 'Ready';
+$_['status_error_upload']	= 'Error Upload';
+$_['status_error_download']	= 'Error Download';
+
+

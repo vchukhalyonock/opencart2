@@ -194,12 +194,22 @@ class ControllerVideoVideo extends Controller {
 	public function getVideoForm() {
 		$data['heading_title'] = $this->language->get('heading_title');
 
+		$data['text_form'] = !isset($this->request->get['video_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_name'] = $this->language->get('entry_name');
 		$data['entry_description'] = $this->language->get('entry_description');
 		$data['entry_customer_link'] = $this->language->get('entry_customer_link');
 		$data['entry_channel_link'] = $this->language->get('entry_channel_link');
 		$data['entry_featured'] = $this->language->get('entry_featured');
+
+		$data['status_new'] = $this->language->get('status_new');
+		$data['status_download'] = $this->language->get('status_download');
+		$data['status_downloaded'] = $this->language->get('status_downloaded');
+		$data['status_upload'] = $this->language->get('status_upload');
+		$data['status_not_ready'] = $this->language->get('status_uploaded');
+		$data['status_ready'] = $this->language->get('status_ready');
+		$data['status_error_upload'] = $this->language->get('status_error_upload');
+		$data['status_error_download'] = $this->language->get('status_error_download');
 
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
@@ -220,8 +230,62 @@ class ControllerVideoVideo extends Controller {
 			'href' => $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true)
 		);
 
+		if (!isset($this->request->get['form_id'])) {
+			$data['action'] = $this->url->link('video/video/add', 'token=' . $this->session->data['token'] . $url, true);
+		} else {
+			$data['action'] =
+				$this->url->link(
+					'video/video/edit',
+					'token=' . $this->session->data['token'] . '&video_id=' . $this->request->get['video_id'] . $url,
+					true);
+		}
+
 		$data['cancel'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true);
 
+		if (isset($this->request->get['video_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+			$video = $this->model_video_channel->getVideo($this->request->get['video_id']);
+		}
+
+
+		if (isset($this->request->post['name'])) {
+			$data['name'] = $this->request->post['name'];
+		} elseif (!empty($video)) {
+			$data['name'] = $video['name'];
+		} else {
+			$data['name'] = '';
+		}
+
+		if (isset($this->request->post['decription'])) {
+			$data['description'] = $this->request->post['description'];
+		} elseif (!empty($video)) {
+			$data['description'] = $video['description'];
+		} else {
+			$data['description'] = '';
+		}
+
+		if (isset($this->request->post['customer_link'])) {
+			$data['customer_link'] = $this->request->post['customer_link'];
+		} elseif (!empty($video)) {
+			$data['customer_link'] = $video['customerLink'];
+		} else {
+			$data['customer_link'] = '';
+		}
+
+		if (isset($this->request->post['channel_link'])) {
+			$data['channel_link'] = $this->request->post['channel_link'];
+		} elseif (!empty($video)) {
+			$data['channel_link'] = $video['channelLink'];
+		} else {
+			$data['channel_link'] = '';
+		}
+
+		if (isset($this->request->post['featured'])) {
+			$data['featured'] = $this->request->post['featured'];
+		} elseif (!empty($video)) {
+			$data['featured'] = $video['featured'];
+		} else {
+			$data['featured'] = 0;
+		}
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
