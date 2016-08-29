@@ -55,7 +55,7 @@ define("READY", 1 << 7);
 
 
 //YOUTUBE
-define("YOUTUBE_CLIENT_KEY", "");
+define("YOUTUBE_CLIENT_KEY", "AIzaSyCg_zkFJ3SlRF2jUUeBxQPv3UZ93jrBcag");
 define("YOUTUBE_TOKEN_FILE_PATH", "/home/mcmxx/www/opencart/system/config/token.txt");
 define("YOUTUBE_APPLICATION_NAME", "Test Name");
 define("YOUTUBE_CLIENT_SECRET", "");
