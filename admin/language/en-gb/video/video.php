@@ -4,6 +4,7 @@ $_['heading_title']     = 'Video';
 
 
 // Text
+$_['text_success']          = 'Success: You have modified videos!';
 $_['text_list']             = 'Videos List';
 $_['text_add']              = 'Add Video';
 $_['text_edit']             = 'Edit Video';

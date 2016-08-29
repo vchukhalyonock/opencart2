@@ -173,6 +173,31 @@ class ControllerVideoVideo extends Controller {
 
 		$this->load->model('video/channel');
 
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+			$this->model_video_channel->addVideo($this->request->post);
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url = '';
+
+			if(isset($data['select_status'])) {
+				$url .= "&select_status=" . $data['select_status'];
+			}
+
+			if(isset($data['search_string'])) {
+				$url .= "&search_string=" . $data['search_string'];
+			}
+
+			if(isset($data['order'])) {
+				$url .= "&order=" . $data['order'];
+			}
+
+			if(isset($data['groupId'])) {
+				$url .= "&group_id=" . $data['group_id'];
+			}
+
+			$this->response->redirect($this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true));
+		}
 
 		$this->getVideoForm();
 	}

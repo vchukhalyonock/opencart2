@@ -59,6 +59,9 @@
 						<label class="col-sm-2 control-label" for="customer_link"><?php echo $entry_customer_link; ?></label>
 						<div class="col-sm-10">
 							<input type="text" name="customer_link" id="customer_link" value="<?php echo $customer_link; ?>" placeholder="<?php echo $entry_customer_link; ?>" id="customer_link" class="form-control" />
+								<?php if ($error_customer_link) { ?>
+									<div class="text-danger"><?php echo $error_customer_link; ?></div>
+								<?php  } ?>
 						</div>
 					</div>
 
