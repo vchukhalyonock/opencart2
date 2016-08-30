@@ -335,7 +335,7 @@ class ModelVideoChannel extends Model {
 	public function isLinkExists($customerLink) {
 		$customerLink = strval($customerLink);
 		$res = $this->db->query(
-			"SELECT `id` FROM " . $this->_table . " WHERE `customerLink`=." . $this->db->escape($customerLink) . "' LIMIT 1");
+			"SELECT `id` FROM " . $this->_table . " WHERE `customerLink`='" . $this->db->escape($customerLink) . "' LIMIT 1");
 
 		return $res->num_rows > 0 ? true : false;
 	}

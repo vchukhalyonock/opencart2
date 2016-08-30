@@ -404,6 +404,9 @@ class ControllerVideoVideo extends Controller {
 			|| !filter_var($this->request->post['customer_link'], FILTER_VALIDATE_URL)) {
 			$this->error['customer_link'] = $this->language->get('error_customer_link');
 		}
+		elseif($this->model_video_channel->isLinkExists($this->request->post['customer_link'])) {
+			$this->error['customer_link'] = $this->language->get('error_customer_link_exist');
+		}
 
 		if ($this->error && !isset($this->error['warning'])) {
 			$this->error['warning'] = $this->language->get('error_warning');
