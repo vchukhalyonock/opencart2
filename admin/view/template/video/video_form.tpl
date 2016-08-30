@@ -54,9 +54,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="description"><?php echo $entry_description; ?></label>
 						<div class="col-sm-10">
-							<textarea name="description" placeholder="<?php echo $entry_description; ?>" id="description" class="form-control">
-								<?php echo $description;?>
-							</textarea>
+							<textarea name="description" placeholder="<?php echo $entry_description; ?>" id="description" class="form-control"><?php echo $description;?></textarea>
 						</div>
 					</div>
 

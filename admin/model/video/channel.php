@@ -187,12 +187,16 @@ class ModelVideoChannel extends Model {
 
 		$query = "UPDATE `" . $this->_table . "` SET " . implode(",", $queryArray) . " WHERE `id`=" . intval($param['id']);
 
+		$this->db->query($query);
+
 		return true;
 	}
 
 
 
-	public function getVideo(int $videoId) {
+	public function getVideo($videoId) {
+		$videoId = intval($videoId);
+
 		$result = $this->db->query(
 			"SELECT "
 				. $this->_table . ".id AS id,"

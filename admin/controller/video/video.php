@@ -236,6 +236,42 @@ class ControllerVideoVideo extends Controller {
 
 		$this->load->model('video/channel');
 
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->get['video_id']) && $this->validateVideoForm()) {
+
+			$param = array(
+				'id' => $this->request->get['video_id'],
+				'name' => $this->request->post['name'],
+				'description' => $this->request->post['description'],
+				'videoStatus' => $this->request->post['status'],
+				'featured' => isset($this->request->post['featured']) && $this->request->post['featured'] == 1 ? 1 : 0,
+				'customerLink' => $this->request->post['customer_link'],
+				'channelLink' => $this->request->post['channel_link']
+				);
+
+			$this->model_video_channel->updateVideo($param);
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url = '';
+
+			if(isset($data['select_status'])) {
+				$url .= "&select_status=" . $data['select_status'];
+			}
+
+			if(isset($data['search_string'])) {
+				$url .= "&search_string=" . $data['search_string'];
+			}
+
+			if(isset($data['order'])) {
+				$url .= "&order=" . $data['order'];
+			}
+
+			if(isset($data['groupId'])) {
+				$url .= "&group_id=" . $data['group_id'];
+			}
+
+			$this->response->redirect($this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true));
+		}
 
 		$this->getVideoForm();
 	}
@@ -294,7 +330,7 @@ class ControllerVideoVideo extends Controller {
 			'href' => $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true)
 		);
 
-		if (!isset($this->request->get['form_id'])) {
+		if (!isset($this->request->get['video_id'])) {
 			$data['action'] = $this->url->link('video/video/add', 'token=' . $this->session->data['token'] . $url, true);
 		} else {
 			$data['action'] =
