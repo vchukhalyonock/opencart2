@@ -15,6 +15,20 @@ class ControllerVideoVideo extends Controller {
 
 
 	public function getVideosList() {
+		if (isset($this->error['warning'])) {
+			$data['error_warning'] = $this->error['warning'];
+		} else {
+			$data['error_warning'] = '';
+		}
+
+		if (isset($this->session->data['success'])) {
+			$data['success'] = $this->session->data['success'];
+			unset($this->session->data['success']);
+		} else {
+			$data['success'] = '';
+		}
+
+
 		$data['select_status'] = isset($this->request->get['select_status'])
 			? $this->request->get['select_status']
 			: null;
