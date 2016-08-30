@@ -167,6 +167,15 @@ class ControllerVideoVideo extends Controller {
 		$data['column_channel_id'] = $this->language->get('column_channel_id');
 		$data['column_actions'] = $this->language->get('column_actions');
 
+		$data['status_new'] = $this->language->get('status_new');
+		$data['status_download'] = $this->language->get('status_download');
+		$data['status_downloaded'] = $this->language->get('status_downloaded');
+		$data['status_upload'] = $this->language->get('status_upload');
+		$data['status_not_ready'] = $this->language->get('status_uploaded');
+		$data['status_ready'] = $this->language->get('status_ready');
+		$data['status_error_upload'] = $this->language->get('status_error_upload');
+		$data['status_error_download'] = $this->language->get('status_error_download');
+
 		$data['token'] = $this->session->data['token'];
 
 		if (isset($this->request->post['selected'])) {

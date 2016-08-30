@@ -83,7 +83,31 @@
               			<td class="text-center"><?php echo $video['id']?></td>
               			<td class="text-center"><?php echo $video['email']?></td>
               			<td class="text-center"><?php echo $video['name']?></td>
-              			<td class="text-center"><?php echo $video['videoStatus']?></td>
+
+                    <td class="text-center"><button type="button"
+
+<?php switch($video['videoStatus']):?>
+<?php case 'new': echo ' class="btn btn-info"> ' . $status_new;?>
+<?php break;?>
+<?php case 'download': echo ' class="btn btn-deafult"> ' . $status_download;?>
+<?php break;?>
+<?php case 'downloaded': echo ' class="btn btn-primary"> ' . $status_downloaded;?>
+<?php break;?>
+<?php case 'upload': echo ' class="btn btn-default"> ' . $status_upload;?>
+<?php break;?>
+<?php case 'ready': echo ' class="btn btn-success"> ' . $status_ready;?>
+<?php break;?>
+<?php case 'err_download': echo ' class="btn btn-danger"> ' . $status_error_download;?>
+<?php break;?>
+<?php case 'err_upload': echo ' class="btn btn-danger"> ' . $status_error_upload;?>
+<?php break;?>
+<?php case 'not_ready': echo ' class="btn btn-warning"> ' . $status_not_ready;?>
+<?php break;?>
+<?php endswitch;?>
+
+                    </button></td>
+
+
               			<td class="text-center"><?php echo $video['featured']?></td>
               			<td class="text-center"><a href="<?php echo $video['customerLink']?>" target="_blank"><?php echo $video['customerLink']?></a></td>
               			<td class="text-center"><a href="http://youtu.be/<?php echo $video['channelLink']?>" target="_blank"><?php echo $video['channelLink']?></a></td>
