@@ -118,7 +118,11 @@ class ControllerVideoVideo extends Controller {
 			
 			$data['videos']['result'][] = array_merge($video, 
 				array(
-					'edit' => $this->url->link('video/video/edit', 'token=' . $this->session->data['token'] . '&video_id=' . $video['id'] . $url, true)
+					'edit' => $this->url->link('video/video/edit', 'token=' . $this->session->data['token'] . '&video_id=' . $video['id'] . $url, true),
+					'change_status' => $this->url->link(
+							'video/video/setNextStatus',
+							'token=' . $this->session->data['token'] . '&video_id=' . $video['id'],
+							true),
 				)
 			);
 		}
@@ -461,6 +465,82 @@ class ControllerVideoVideo extends Controller {
 		else {
 			$this->response->setOutput(json_encode(array('result' => false)));
 		}
+	}
+
+
+	public function setNextStatus() {
+		$this->load->model('video/channel');
+
+		if (!$this->user->hasPermission('modify', 'video/video') || !isset($this->request->get['video_id'])) {
+			$this->response->setOutput(json_encode(array('result' => false)));
+			die;
+		}
+
+		$videoId = $this->request->get['video_id'];
+		$video = $this->model_video_channel->getVideo($videoId);
+
+		if(!$video) {
+			$this->response->setOutput(json_encode(array('result' => false)));
+			die;
+		}
+
+
+		$currentStatus = $video['videoStatus'];
+		switch ($currentStatus) {
+			case 'new':
+				$newStatus = 'download';
+				break;
+
+			case 'download':
+				$newStatus = 'new';
+				break;
+
+			case 'downloaded':
+				$newStatus = 'upload';
+				break;
+
+			case 'upload':
+				$newStatus = 'downloaded';
+				break;
+
+			case 'not_ready':
+				$newStatus = 'ready';
+				break;
+
+			case 'ready':
+				$newStatus = 'not_ready';
+				break;
+
+			case 'err_download':
+				$newStatus = 'download';
+				break;
+
+			case 'err_upload':
+				$newStatus = 'upload';
+				break;
+
+			default:
+				$newStatus = 'new';
+				break;
+		}
+
+		$this->model_video_channel->updateVideo(
+			array(
+				'id' => $videoId,
+				'videoStatus' => $newStatus
+				)
+			);
+		$video = $this->model_video_channel->getVideo($videoId);
+
+		$this->response->setOutput(
+			json_encode(
+				array(
+					'result' => true,
+					'status' => $video['videoStatus'],
+					'id' => $videoId
+					)
+				)
+			);
 	}
 
 

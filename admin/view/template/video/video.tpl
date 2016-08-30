@@ -84,7 +84,7 @@
               			<td class="text-center"><?php echo $video['email']?></td>
               			<td class="text-center"><?php echo $video['name']?></td>
 
-                    <td class="text-center"><button type="button"
+                    <td class="text-center"><button id="nextStatus<?php echo $video['id'];?>" type="button" link="<?php echo $video['change_status'];?>"
 
 <?php switch($video['videoStatus']):?>
 <?php case 'new': echo ' class="btn btn-info"> ' . $status_new;?>
@@ -127,4 +127,64 @@
   	</div>
   </div>
 </div>
+<script type="text/javascript">
+jQuery.expr[':'].regex = function(elem, index, match) {
+    var matchParams = match[3].split(','),
+        validLabels = /^(data|css):/,
+        attr = {
+            method: matchParams[0].match(validLabels) ?
+                        matchParams[0].split(':')[0] : 'attr',
+            property: matchParams.shift().replace(validLabels,'')
+        },
+        regexFlags = 'ig',
+        regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
+    return regex.test(jQuery(elem)[attr.method](attr.property));
+}
+
+$("button:regex(id, ^nextStatus[0-9]+$)").click(function(e){
+        e.preventDefault();
+        var linkObj = this;
+        $.ajax ({
+            type: 'GET',
+            url: $(this).attr('link'),
+            success : function(data){
+               if(data.result == true) {
+                    $(linkObj).empty();
+                    switch (data.status) {
+                        case 'new':
+                        $(linkObj).attr('class', 'btn btn-info');
+                        $(linkObj).text('<?php echo $status_new?>');
+                        break;
+
+                        case 'download':
+                        $(linkObj).attr('class', 'btn btn-default');
+                        $(linkObj).text('<?php echo $status_download?>');
+                        break;
+
+                        case 'downloaded':
+                        $(linkObj).attr('class', 'btn btn-primary');
+                        $(linkObj).text('<?php echo $status_downloaded?>');
+                        break;
+
+                        case 'upload':
+                        $(linkObj).attr('class', 'btn btn-default');
+                        $(linkObj).text('<?php echo $status_upload?>');
+                        break;
+
+                        case 'not_ready':
+                        $(linkObj).attr('class', 'btn btn-warning');
+                        $(linkObj).text('<?php echo $status_not_ready?>');
+                        break;
+
+                        case 'ready':
+                        $(linkObj).attr('class', 'btn btn-success');
+                        $(linkObj).text('<?php echo $status_ready?>');
+                        break;
+                    }
+               }
+            },
+            dataType: 'json'
+        });
+    });
+</script>
 <?php echo $footer; ?>
