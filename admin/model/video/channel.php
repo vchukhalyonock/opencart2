@@ -332,7 +332,16 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function geleteVideo(int $videoId) {
+	public function isLinkExists($customerLink) {
+		$customerLink = strval($customerLink);
+		$res = $this->db->query(
+			"SELECT `id` FROM " . $this->_table . " WHERE `customerLink`=." . $this->db->escape($customerLink) . "' LIMIT 1");
+
+		return $res->num_rows > 0 ? true : false;
+	}
+
+
+	public function deleteVideo(int $videoId) {
 		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId);
 		$this->db->query("DELETE FROM " . $this->_table . " WHERE `id`=" . $videoId);
 
