@@ -102,7 +102,7 @@ class ControllerVideoVideo extends Controller {
 		);
 
 		$data['add'] = $this->url->link('video/video/add', 'token=' . $this->session->data['token'] . $url, true);
-		$data['delete'] = $this->url->link('video/video/delete', 'token=' . $this->session->data['token'] . $url, true);
+		$data['delete'] = $this->url->link('video/video/deleteVideos', 'token=' . $this->session->data['token'] . $url, true);
 
 		$allVideos = $this->model_video_channel
 			->getAllVideos(
@@ -156,6 +156,7 @@ class ControllerVideoVideo extends Controller {
 		$data['button_unlock'] = $this->language->get('button_unlock');
 
 		$data['text_list'] = $this->language->get('text_list');
+		$data['text_confirm'] = $this->language->get('text_confirm');
 
 		$data['column_id'] = $this->language->get('column_id');
 		$data['column_email'] = $this->language->get('column_email');
@@ -206,19 +207,19 @@ class ControllerVideoVideo extends Controller {
 
 			$url = '';
 
-			if(isset($data['select_status'])) {
+			if(isset($this->reques->get['select_status'])) {
 				$url .= "&select_status=" . $data['select_status'];
 			}
 
-			if(isset($data['search_string'])) {
+			if(isset($this->reques->get['search_string'])) {
 				$url .= "&search_string=" . $data['search_string'];
 			}
 
-			if(isset($data['order'])) {
+			if(isset($this->reques->get['order'])) {
 				$url .= "&order=" . $data['order'];
 			}
 
-			if(isset($data['groupId'])) {
+			if(isset($this->reques->get['groupId'])) {
 				$url .= "&group_id=" . $data['group_id'];
 			}
 
@@ -254,19 +255,19 @@ class ControllerVideoVideo extends Controller {
 
 			$url = '';
 
-			if(isset($data['select_status'])) {
+			if(isset($this->reques->get['select_status'])) {
 				$url .= "&select_status=" . $data['select_status'];
 			}
 
-			if(isset($data['search_string'])) {
+			if(isset($this->reques->get['search_string'])) {
 				$url .= "&search_string=" . $data['search_string'];
 			}
 
-			if(isset($data['order'])) {
+			if(isset($this->reques->get['order'])) {
 				$url .= "&order=" . $data['order'];
 			}
 
-			if(isset($data['groupId'])) {
+			if(isset($this->reques->get['groupId'])) {
 				$url .= "&group_id=" . $data['group_id'];
 			}
 
@@ -451,6 +452,60 @@ class ControllerVideoVideo extends Controller {
 		else {
 			$this->response->setOutput(json_encode(array('result' => false)));
 		}
+	}
+
+
+	public function deleteVideos() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+		if (isset($this->request->post['selected']) && $this->validateDeleteVideos()) {
+			
+			if(count($this->request->post['selected']) == 1)
+				$this->model_video_channel->deleteVideos(array_shift($this->request->post['selected']));
+			else
+				$this->model_video_channel->deleteVideos($this->request->post['selected']);
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url = '';
+
+			if(isset($this->reques->get['select_status'])) {
+				$url .= "&select_status=" . $data['select_status'];
+			}
+
+			if(isset($this->reques->get['search_string'])) {
+				$url .= "&search_string=" . $data['search_string'];
+			}
+
+			if(isset($this->reques->get['order'])) {
+				$url .= "&order=" . $data['order'];
+			}
+
+			if(isset($this->reques->get['groupId'])) {
+				$url .= "&group_id=" . $data['group_id'];
+			}
+
+			if(isset($this->reques->get['page'])) {
+				$url .= "&page=" . $data['page'];
+			}
+			
+			$this->response->redirect($this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true));
+		}
+
+		$this->getVideosList();
+	}
+
+
+	protected function validateDeleteVideos() {
+		if (!$this->user->hasPermission('modify', 'video/video')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		return !$this->error;
 	}
 }
 ?>

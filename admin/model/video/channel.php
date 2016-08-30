@@ -7,7 +7,7 @@ class ModelVideoChannel extends Model {
 
 	private $_table = 'oc_videos';
 	private $_groupsTable = 'oc_videos_groups';
-	private $_groupsAssocTable = 'co_videos_groups_assoc';
+	private $_groupsAssocTable = 'oc_videos_groups_assoc';
 	private $_customerTable = 'customer';
 
 
@@ -341,9 +341,19 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function deleteVideo(int $videoId) {
-		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId);
-		$this->db->query("DELETE FROM " . $this->_table . " WHERE `id`=" . $videoId);
+	public function deleteVideos($videoIds) {
+		$ids = array();
+		if(is_array($videoIds)) {
+			foreach ($videoIds as $id)
+				$ids[] = intval($id);
+		}
+		else {
+			$ids[] = intval($videoIds);
+		}
+
+
+		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId` IN (" . implode(",", $ids) . ")");
+		$this->db->query("DELETE FROM " . $this->_table . " WHERE `id` IN (" . implode(",", $ids) . ")");
 
 		return;
 	}
