@@ -1,6 +1,8 @@
 <?php
 class ControllerVideoVideo extends Controller {
 
+	private $error = array();
+
 	public function index() {
 		$this->load->language('video/video');
 
@@ -173,8 +175,18 @@ class ControllerVideoVideo extends Controller {
 
 		$this->load->model('video/channel');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_video_channel->addVideo($this->request->post);
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateVideoForm()) {
+
+			$param = array(
+				'name' => $this->request->post['name'],
+				'description' => $this->request->post['description'],
+				'videoStatus' => $this->request->post['status'],
+				'featured' => isset($this->request->post['featured']) && $this->request->post['featured'] == 1 ? 1 : 0,
+				'customerLink' => $this->request->post['customer_link'],
+				'channelLink' => $this->request->post['channel_link']
+				);
+
+			$this->model_video_channel->createVideo($param);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -241,6 +253,18 @@ class ControllerVideoVideo extends Controller {
 		$data['button_get_content'] = $this->language->get('button_get_content');
 
 		$data['token'] = $this->session->data['token'];
+
+		if (isset($this->error['warning'])) {
+			$data['error_warning'] = $this->error['warning'];
+		} else {
+			$data['error_warning'] = '';
+		}
+
+		if (isset($this->error['customer_link'])) {
+			$data['error_customer_link'] = $this->error['customer_link'];
+		} else {
+			$data['error_customer_link'] = '';
+		}
 
 		$url = '';
 
@@ -318,6 +342,24 @@ class ControllerVideoVideo extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 
 		$this->response->setOutput($this->load->view('video/video_form', $data));
+	}
+
+
+	protected function validateVideoForm() {
+		if (!$this->user->hasPermission('modify', 'video/video')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		if ((utf8_strlen($this->request->post['customer_link']) < 1) || (utf8_strlen(trim($this->request->post['customer_link'])) > 255)
+			|| !filter_var($this->request->post['customer_link'], FILTER_VALIDATE_URL)) {
+			$this->error['customer_link'] = $this->language->get('error_customer_link');
+		}
+
+		if ($this->error && !isset($this->error['warning'])) {
+			$this->error['warning'] = $this->language->get('error_warning');
+		}
+
+		return !$this->error;
 	}
 
 

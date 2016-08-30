@@ -43,3 +43,9 @@ $_['status_error_download']	= 'Error Download';
 
 //Buttons
 $_['button_get_content'] = 'Get Video Content';
+
+
+//Errors
+$_['error_warning']			= 'Warning: Please check the form carefully for errors!';
+$_['error_permission']		= 'Warning: You do not have permission to modify videos!';
+$_['error_customer_link']	= 'Customer Link must be URL and between 1 and 255 characters!';
