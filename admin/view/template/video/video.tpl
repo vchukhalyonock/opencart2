@@ -144,6 +144,7 @@
               			<td class="text-center"><a href="<?php echo $video['customerLink']?>" target="_blank"><?php echo $video['customerLink']?></a></td>
               			<td class="text-center"><a href="http://youtu.be/<?php echo $video['channelLink']?>" target="_blank"><?php echo $video['channelLink']?></a></td>
               			<td class="text-center">
+                      <a href="<?php echo $video['get_groups']; ?>" data-toggle="tooltip" title="<?php echo $button_get_groups; ?>" class="btn btn-warning"><i class="fa fa-group"></i></a>
               				<a href="<?php echo $video['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
               			</td>
               		</tr>

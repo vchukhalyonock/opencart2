@@ -48,6 +48,7 @@ $_['text_not_featured'] = 'Not Featured';
 
 //Buttons
 $_['button_get_content'] = 'Get Video Content';
+$_['button_get_groups'] = 'Groups';
 
 
 //Errors

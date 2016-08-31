@@ -14,6 +14,22 @@ class ControllerVideoVideo extends Controller {
 	}
 
 
+	public function groups() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+		$this->getGroupsList();
+	}
+
+
+	public function getGroupsList() {
+
+	}
+
+
 	public function getVideosList() {
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
@@ -128,6 +144,10 @@ class ControllerVideoVideo extends Controller {
 							'video/video/setFeatured',
 							'token=' . $this->session->data['token'] . '&video_id=' . $video['id'],
 							true),
+						'get_groups' =>	$this->url->link(
+							'video/video/groups',
+							'token=' . $this->session->data['token'] . '&video_id=' . $video['id'] . $url,
+							true),
 					)
 				);
 			}
@@ -166,6 +186,7 @@ class ControllerVideoVideo extends Controller {
 		$data['button_filter'] = $this->language->get('button_filter');
 		$data['button_login'] = $this->language->get('button_login');
 		$data['button_unlock'] = $this->language->get('button_unlock');
+		$data['button_get_groups'] = $this->language->get('button_get_groups');
 
 		$data['text_list'] = $this->language->get('text_list');
 		$data['text_confirm'] = $this->language->get('text_confirm');
