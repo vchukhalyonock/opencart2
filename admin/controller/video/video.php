@@ -17,7 +17,7 @@ class ControllerVideoVideo extends Controller {
 	public function groups() {
 		$this->load->language('video/video');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle($this->language->get('groups_heading_title'));
 
 		$this->load->model('video/channel');
 
@@ -26,7 +26,80 @@ class ControllerVideoVideo extends Controller {
 
 
 	public function getGroupsList() {
+		if (isset($this->error['warning'])) {
+			$data['error_warning'] = $this->error['warning'];
+		} else {
+			$data['error_warning'] = '';
+		}
 
+		if (isset($this->session->data['success'])) {
+			$data['success'] = $this->session->data['success'];
+			unset($this->session->data['success']);
+		} else {
+			$data['success'] = '';
+		}
+
+		$data['search_string'] = isset($this->request->get['search_string'])
+			? $this->request->get['search_string']
+			: null;
+
+		$page = isset($this->request->get['page'])
+			? $this->request->get['page']
+			: 1;
+
+		$startGroup = ($page - 1) * $this->config->get('config_limit_admin');
+
+		$data['order'] = isset($this->request->get['order'])
+			? $this->request->get['order']
+			: ORDER_BY_ID | ORDER_ASC;
+
+		$data['video_id'] = isset($this->request->get['video_id'])
+			? $this->request->get['video_id']
+			: null;
+
+		$url = '';
+
+		if(isset($data['search_string'])) {
+			$url .= "&search_string=" . $data['search_string'];
+		}
+
+		if(isset($data['order'])) {
+			$url .= "&order=" . $data['order'];
+		}
+
+		if(isset($data['videoId'])) {
+			$url .= "&video_id=" . $data['video_id'];
+		}
+
+		$video = $this->model_video_channel->getVideo($data['video_id']);
+
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('heading_title'),
+			'href' => $this->url->link('video/video', 'token=' . $this->session->data['token'] . $url, true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $video['name'],
+			'href' => $this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true)
+		);
+
+		$data['add'] = $this->url->link('video/video/add', 'token=' . $this->session->data['token'] . $url, true);
+		$data['delete'] = $this->url->link('video/video/deleteVideos', 'token=' . $this->session->data['token'] . $url, true);
+
+		$data['heading_title'] = $this->language->get('groups_heading_title');
+
+		$data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+
+		$this->response->setOutput($this->load->view('video/video_groups', $data));
 	}
 
 

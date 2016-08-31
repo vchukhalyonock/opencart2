@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']     = 'Video';
+$_['groups_heading_title'] = 'Video Groups';
 
 
 // Text
