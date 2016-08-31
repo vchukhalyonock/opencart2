@@ -63,11 +63,24 @@ class ControllerVideoVideo extends Controller {
 			$url .= "&search_string=" . $data['search_string'];
 		}
 
+		if(isset($data['video_id'])) {
+			$url .= "&video_id=" . $data['video_id'];
+		}
+
+		$data['order_id'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_ID . $url, true);
+		$data['order_name'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_NAME . $url, true);
+
+		$url = '';
+
+		if(isset($data['search_string'])) {
+			$url .= "&search_string=" . $data['search_string'];
+		}
+
 		if(isset($data['order'])) {
 			$url .= "&order=" . $data['order'];
 		}
 
-		if(isset($data['videoId'])) {
+		if(isset($data['video_id'])) {
 			$url .= "&video_id=" . $data['video_id'];
 		}
 
@@ -90,10 +103,69 @@ class ControllerVideoVideo extends Controller {
 			'href' => $this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true)
 		);
 
-		$data['add'] = $this->url->link('video/video/add', 'token=' . $this->session->data['token'] . $url, true);
-		$data['delete'] = $this->url->link('video/video/deleteVideos', 'token=' . $this->session->data['token'] . $url, true);
+		$data['add'] = $this->url->link('video/video/addGroup', 'token=' . $this->session->data['token'] . $url, true);
+		$data['delete'] = $this->url->link('video/video/deleteGroups', 'token=' . $this->session->data['token'] . $url, true);
 
 		$data['heading_title'] = $this->language->get('groups_heading_title');
+
+		$data['text_groups_list'] = $this->language->get('text_groups_list');
+		$data['text_associated'] = $this->language->get('text_associated');
+		$data['text_not_associated'] = $this->language->get('text_not_associated');
+
+		$data['column_id'] = $this->language->get('column_id');
+		$data['column_name'] = $this->language->get('column_name');
+		$data['column_actions'] = $this->language->get('column_actions');
+		$data['column_associated'] = $this->language->get('column_associated');
+
+		$data['button_filter'] = $this->language->get('button_filter');
+
+		$data['entry_search'] = $this->language->get('entry_search');
+
+		$allGroups = $this->model_video_channel->getAllGroups($data['order'], $startGroup, $this->config->get('config_limit_admin'));
+
+		$data['groups'] = array(
+			'result' => array(),
+			'total' => $allGroups['total']);
+
+		foreach ($allGroups['result'] as $group) {
+			$data['groups']['result'][] = array_merge($group, 
+					array(
+						'edit' => $this->url->link('video/video/editGroups', 'token=' . $this->session->data['token'] . '&group_id=' . $group['id'] . $url, true),
+						'change_assoc' => $this->url->link(
+							'video/video/setAssoc',
+							'token=' . $this->session->data['token'] . '&video_id=' . $data['video_id'] . '&group_id=' . $group['id'],
+							true),
+						'associated' => $this->model_video_channel->isVideoAssoc($data['video_id'], $group['id'])
+					)
+				);
+		}
+
+
+		$pagination = new Pagination();
+		$pagination->total = $data['groups']['total'];
+		$pagination->page = $page;
+		$pagination->limit = $this->config->get('config_limit_admin');
+		$pagination->url = $this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url . '&page={page}', true);
+
+		$data['pagination'] = $pagination->render();
+
+		$data['results'] =
+			sprintf(
+				$this->language->get('text_pagination'),
+				($data['groups']['total'])
+					? (($page - 1) * $this->config->get('config_limit_admin')) + 1
+					: 0,
+				((($page - 1) * $this->config->get('config_limit_admin')) > ($data['groups']['total'] - $this->config->get('config_limit_admin')))
+					? $data['groups']['total']
+					: ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')),
+					$data['groups']['total'], ceil($data['groups']['total'] / $this->config->get('config_limit_admin'))
+			);
+
+		if (isset($this->request->post['selected'])) {
+			$data['selected'] = (array)$this->request->post['selected'];
+		} else {
+			$data['selected'] = array();
+		}
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');

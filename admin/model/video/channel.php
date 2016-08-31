@@ -84,7 +84,7 @@ class ModelVideoChannel extends Model {
 
 		$query = "SELECT SQL_CALC_FOUND_ROWS "
 			. "`id`,
-				`name`
+				`name`,
 				`description`"
 			. "FROM " . $this->_groupsTable
 			. " ORDER BY " . $orderField . $orderDirection;
@@ -341,22 +341,27 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function isVideoAssoc(int $videoId, int $groupId) {
+	public function isVideoAssoc($videoId, $groupId) {
+		$videoId = intval($videoId);
+		$groupId = intval($groupId);
 		$res = $this->db->query(
 			"SELECT `groupId`, `videoId` FROM " . $this->_groupsAssocTable
 				. " WHERE `groupId`=" . $groupId . " AND `videoId`=" .  $videoId . " LIMIT 1");
-		return $res->num_rows > 0 ? 1 : 0;
+		return $res->num_rows > 0 ? true : false;
 	}
 
 
-	public function setFeatured(int $videoId, $featured = TRUE) {
+	public function setFeatured($videoId, $featured = TRUE) {
+		$videoId = intval($videoId);
 		$featured = ($featured) ? 1 : 0;
 		$this->db->query("UPDATE " . $this->_table . " SET `featured`=" . $featured . " WHERE `id`=" . $videoId);
 		return;
 	}
 
 
-	public function groupVideoAssoc(int $videoId, int $groupId) {
+	public function groupVideoAssoc($videoId, $groupId) {
+		$videoId = intval($videoId);
+		$groupId = intval($groupId);
 		if($this->isVideoAssoc($videoId, $groupId) == 1)
 			return;
 
@@ -365,7 +370,9 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function groupVideoUnAssoc(int $videoId, int $groupId) {
+	public function groupVideoUnAssoc($videoId, $groupId) {
+		$videoId = intval($videoId);
+		$groupId = intval($groupId);
 		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId . " AND `groupId`=" . $groupId . " LIMIT 1");
 		return;
 	}

@@ -7,6 +7,7 @@ $_['groups_heading_title'] = 'Video Groups';
 // Text
 $_['text_success']          = 'Success: You have modified videos!';
 $_['text_list']             = 'Videos List';
+$_['text_groups_list']      = 'Videos Groups List';
 $_['text_add']              = 'Add Video';
 $_['text_edit']             = 'Edit Video';
 
@@ -20,6 +21,7 @@ $_['column_featured']		= 'Featured';
 $_['column_customer_link']	= 'Customer Link';
 $_['column_channel_id']		= 'Channel Id';
 $_['column_actions']		= 'Actions';
+$_['column_associated']		= 'Associated';
 
 
 //Entry
@@ -46,6 +48,9 @@ $_['status_error_download']	= 'Error Download';
 $_['text_featured'] = 'Featured';
 $_['text_not_featured'] = 'Not Featured';
 
+//Associated
+$_['text_associated'] = 'In the Group';
+$_['text_not_associated'] = 'Not in the Group';
 
 //Buttons
 $_['button_get_content'] = 'Get Video Content';
