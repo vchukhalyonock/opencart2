@@ -179,7 +179,7 @@ class ControllerVideoVideo extends Controller {
 		$data['status_download'] = $this->language->get('status_download');
 		$data['status_downloaded'] = $this->language->get('status_downloaded');
 		$data['status_upload'] = $this->language->get('status_upload');
-		$data['status_not_ready'] = $this->language->get('status_uploaded');
+		$data['status_not_ready'] = $this->language->get('status_not_ready');
 		$data['status_ready'] = $this->language->get('status_ready');
 		$data['status_error_upload'] = $this->language->get('status_error_upload');
 		$data['status_error_download'] = $this->language->get('status_error_download');
@@ -314,7 +314,7 @@ class ControllerVideoVideo extends Controller {
 		$data['status_download'] = $this->language->get('status_download');
 		$data['status_downloaded'] = $this->language->get('status_downloaded');
 		$data['status_upload'] = $this->language->get('status_upload');
-		$data['status_not_ready'] = $this->language->get('status_uploaded');
+		$data['status_not_ready'] = $this->language->get('status_not_ready');
 		$data['status_ready'] = $this->language->get('status_ready');
 		$data['status_error_upload'] = $this->language->get('status_error_upload');
 		$data['status_error_download'] = $this->language->get('status_error_download');
@@ -365,6 +365,14 @@ class ControllerVideoVideo extends Controller {
 
 		if (isset($this->request->get['video_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$video = $this->model_video_channel->getVideo($this->request->get['video_id']);
+		}
+
+		if (isset($this->request->post['status'])) {
+			$data['status'] = $this->request->post['status'];
+		} elseif (!empty($video)) {
+			$data['status'] = $video['videoStatus'];
+		} else {
+			$data['status'] = 'new';
 		}
 
 

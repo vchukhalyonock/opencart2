@@ -32,14 +32,14 @@
 					<label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
 						<div class="col-sm-10">
 							<select name="status" id="input-status" class="form-control">
-								<option value="new"><?php echo $status_new;?></option>
-								<option value="download"><?php echo $status_download;?></option>
-								<option value="downloaded"><?php echo $status_downloaded?></option>
-								<option value="upload"><?php echo $status_upload;?></option>
-								<option value="not_ready"><?php echo $status_not_ready;?></option>
-								<option value="ready"><?php echo $status_ready;?></option>
-								<option value="error_upload"><?php echo $status_error_upload;?></option>
-								<option value="error_download"><?php echo $status_error_download;?></option>
+								<option value="new" <?php if ($status == 'new') echo "selected";?>><?php echo $status_new;?></option>
+								<option value="download" <?php if ($status == 'download') echo "selected";?>><?php echo $status_download;?></option>
+								<option value="downloaded" <?php if ($status == 'downloaded') echo "selected";?>><?php echo $status_downloaded?></option>
+								<option value="upload" <?php if ($status == 'upload') echo "selected";?>><?php echo $status_upload;?></option>
+								<option value="not_ready" <?php if ($status == 'not_ready') echo "selected";?>><?php echo $status_not_ready;?></option>
+								<option value="ready" <?php if ($status == 'ready') echo "selected";?>><?php echo $status_ready;?></option>
+								<option value="error_upload" <?php if ($status == 'error_upload') echo "selected";?>><?php echo $status_error_upload;?></option>
+								<option value="error_download" <?php if ($status == 'error_download') echo "selected";?>><?php echo $status_error_download;?></option>
 							</select>
 						</div>
 					</div>
