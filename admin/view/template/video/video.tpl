@@ -138,7 +138,9 @@
                     </button></td>
 
 
-              			<td class="text-center"><?php echo $video['featured']?></td>
+              			<td class="text-center"><button id="featured<?php echo $video['id'];?>" type="button" link="<?php echo $video['change_featured'];?>"
+                    <?php if($video['featured'] == 1) echo ' class="btn btn-danger">' . $text_featured; else echo ' class="btn btn-default">' . $text_not_featured;?></button>
+                    </td>
               			<td class="text-center"><a href="<?php echo $video['customerLink']?>" target="_blank"><?php echo $video['customerLink']?></a></td>
               			<td class="text-center"><a href="http://youtu.be/<?php echo $video['channelLink']?>" target="_blank"><?php echo $video['channelLink']?></a></td>
               			<td class="text-center">
@@ -211,6 +213,30 @@ $("button:regex(id, ^nextStatus[0-9]+$)").click(function(e){
                         $(linkObj).attr('class', 'btn btn-success');
                         $(linkObj).text('<?php echo $status_ready?>');
                         break;
+                    }
+               }
+            },
+            dataType: 'json'
+        });
+    });
+
+
+$("button:regex(id, ^featured[0-9]+$)").click(function(e){
+        e.preventDefault();
+        var linkObj = this;
+        $.ajax ({
+            type: 'GET',
+            url: $(this).attr('link'),
+            success : function(data){
+               if(data.result == true) {
+                    $(linkObj).empty();
+                    if(data.featured == 1) {
+                      $(linkObj).attr('class', 'btn btn-danger');
+                      $(linkObj).text('<?php echo $text_featured?>');
+                    }
+                    else {
+                      $(linkObj).attr('class', 'btn btn-default');
+                      $(linkObj).text('<?php echo $text_not_featured?>');
                     }
                }
             },

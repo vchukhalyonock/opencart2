@@ -41,6 +41,10 @@ $_['status_ready']			= 'Ready';
 $_['status_error_upload']	= 'Error Upload';
 $_['status_error_download']	= 'Error Download';
 
+//Featured
+$_['text_featured'] = 'Featured';
+$_['text_not_featured'] = 'Not Featured';
+
 
 //Buttons
 $_['button_get_content'] = 'Get Video Content';

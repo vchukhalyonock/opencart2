@@ -124,6 +124,10 @@ class ControllerVideoVideo extends Controller {
 							'video/video/setNextStatus',
 							'token=' . $this->session->data['token'] . '&video_id=' . $video['id'],
 							true),
+						'change_featured' => $this->url->link(
+							'video/video/setFeatured',
+							'token=' . $this->session->data['token'] . '&video_id=' . $video['id'],
+							true),
 					)
 				);
 			}
@@ -186,6 +190,9 @@ class ControllerVideoVideo extends Controller {
 
 		$data['entry_search'] = $this->language->get('entry_search');
 		$data['entry_status'] = $this->language->get('entry_status');
+
+		$data['text_featured'] = $this->language->get('text_featured');
+		$data['text_not_featured'] = $this->language->get('text_not_featured');
 
 		$data['token'] = $this->session->data['token'];
 
@@ -552,6 +559,43 @@ class ControllerVideoVideo extends Controller {
 				array(
 					'result' => true,
 					'status' => $video['videoStatus'],
+					'id' => $videoId
+					)
+				)
+			);
+	}
+
+
+	public function setFeatured() {
+		$this->load->model('video/channel');
+
+		if (!$this->user->hasPermission('modify', 'video/video') || !isset($this->request->get['video_id'])) {
+			$this->response->setOutput(json_encode(array('result' => false)));
+			die;
+		}
+
+		$videoId = $this->request->get['video_id'];
+		$video = $this->model_video_channel->getVideo($videoId);
+
+		if(!$video) {
+			$this->response->setOutput(json_encode(array('result' => false)));
+			die;
+		}
+
+		$this->model_video_channel->updateVideo(
+			array(
+				'id' => $videoId,
+				'featured' => $video['featured'] == 1 ? 0 : 1
+			)
+		);
+
+		$video = $this->model_video_channel->getVideo($videoId);
+
+		$this->response->setOutput(
+			json_encode(
+				array(
+					'result' => true,
+					'featured' => $video['featured'],
 					'id' => $videoId
 					)
 				)
