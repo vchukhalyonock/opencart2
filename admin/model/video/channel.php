@@ -223,12 +223,15 @@ class ModelVideoChannel extends Model {
 
 
 	public function getAllVideos(
-			int $groupId = null,
-			string $search = null,
-			string $select = null,
+			$groupId = null,
+			$search = null,
+			$select = null,
 			$order = 5,
 			$start = 0,
 			$limit = 0) {
+		$groupId = is_null($groupId) ? null : intval($groupId);
+		$search = is_null($search) ? null : strval($search);
+		$select = is_null($select) ? null : strval($select);
 		$order = intval($order);
 		$start = intval($start);
 		$limit = intval($limit);
@@ -274,30 +277,7 @@ class ModelVideoChannel extends Model {
 
 		//WHERE part
 		if(!is_null($select)) {
-			if($select & RECENT) {
-				$whereArray[] = $this->_table . ".videoStatus='new'";
-			}
-			elseif ($select & FEATURED) {
-				$whereArray[] = $this->_table . ".featured=1";
-			}
-			elseif ($select & TO_DOWNLOAD) {
-				$whereArray[] = $this->_table . ".videoStatus='download'";
-			}
-			elseif ($select & TO_UPLOAD) {
-				$whereArray[] = $this->_table . ".videoStatus='upload'";
-			}
-			elseif ($select & UPLOADED) {
-				$whereArray[] = $this->_table . ".videoStatus='not_ready'";
-			}
-			elseif ($select & DOWNLOADED) {
-				$whereArray[] = $this->_table . ".videoStatus='downloaded'";
-			}
-			elseif ($select & ERRORS) {
-				$whereArray[] = $this->_table . ".videoStatus IN ('err_download', 'err_upload')";
-			}
-			elseif ($select & READY) {
-				$whereArray[] = $this->_table . ".videoStatus='ready'";
-			}
+			$whereArray[] = $this->_table . ".videoStatus='" . $this->db->escape($select) . "'";
 		}
 
 		if(!is_null($groupId)) {
@@ -313,8 +293,10 @@ class ModelVideoChannel extends Model {
 				. DB_PREFIX . $this->_customerTable . ".email LIKE ({$search}) )";
 		}
 
-		$query .= implode(" AND ", $whereArray)
-			. " ORDER BY " . $orderField . $orderDirection;
+		if(count($whereArray) > 0)
+			$query .= " WHERE " . implode(" AND ", $whereArray);
+
+		$query .= " ORDER BY " . $orderField . $orderDirection;
 
 		if($limit > 0) {
 			$query .= " LIMIT " . $start . ", " . $limit;

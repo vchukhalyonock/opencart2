@@ -114,18 +114,22 @@ class ControllerVideoVideo extends Controller {
 				$this->config->get('config_limit_admin')
 				);
 
-		foreach ($allVideos['result'] as $video) {
-			
-			$data['videos']['result'][] = array_merge($video, 
-				array(
-					'edit' => $this->url->link('video/video/edit', 'token=' . $this->session->data['token'] . '&video_id=' . $video['id'] . $url, true),
-					'change_status' => $this->url->link(
+		if(count($allVideos['result']) > 0) {
+			foreach ($allVideos['result'] as $video) {
+
+				$data['videos']['result'][] = array_merge($video, 
+					array(
+						'edit' => $this->url->link('video/video/edit', 'token=' . $this->session->data['token'] . '&video_id=' . $video['id'] . $url, true),
+						'change_status' => $this->url->link(
 							'video/video/setNextStatus',
 							'token=' . $this->session->data['token'] . '&video_id=' . $video['id'],
 							true),
-				)
-			);
+					)
+				);
+			}
 		}
+		else
+			$data['videos']['result'] = array();
 
 		$data['videos']['total'] = $allVideos['total'];
 
@@ -179,6 +183,9 @@ class ControllerVideoVideo extends Controller {
 		$data['status_ready'] = $this->language->get('status_ready');
 		$data['status_error_upload'] = $this->language->get('status_error_upload');
 		$data['status_error_download'] = $this->language->get('status_error_download');
+
+		$data['entry_search'] = $this->language->get('entry_search');
+		$data['entry_status'] = $this->language->get('entry_status');
 
 		$data['token'] = $this->session->data['token'];
 

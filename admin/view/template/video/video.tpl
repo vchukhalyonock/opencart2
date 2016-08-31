@@ -30,6 +30,36 @@
   		<div class="panel-heading">
         	<h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
       	</div>
+         <div class="panel-body">
+
+          <div class="well">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="search-string"><?php echo $entry_search; ?></label>
+                <input type="text" name="search_string" value="<?php echo $search_string; ?>" placeholder="<?php echo $entry_search; ?>" id="search-string" class="form-control" />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="select-status"><?php echo $entry_status; ?></label>
+                <select name="select_status" id="select-status" class="form-control">
+                  <option value="*"></option>
+                  <option value="new" <?php if($select_status == 'new') echo "selected";?>><?php echo $status_new;?></option>
+                  <option value="download" <?php if($select_status == 'download') echo "selected";?>><?php echo $status_download;?></option>
+                  <option value="downloaded" <?php if($select_status == 'downloaded') echo "selected";?>><?php echo $status_downloaded?></option>
+                  <option value="upload" <?php if($select_status == 'upload') echo "selected";?>><?php echo $status_upload;?></option>
+                  <option value="not_ready" <?php if($select_status == 'not_ready') echo "selected";?>><?php echo $status_not_ready;?></option>
+                  <option value="ready" <?php if($select_status == 'ready') echo "selected";?>><?php echo $status_ready;?></option>
+                  <option value="error_upload" <?php if($select_status == 'error_upload') echo "selected";?>><?php echo $status_error_upload;?></option>
+                  <option value="error_download" <?php if($select_status == 'error_download') echo "selected";?>><?php echo $status_error_download;?></option>
+                </select>
+              </div>
+               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+            </div>
+          </div>
+        </div>
+
 
          <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-video">
       	<div class="table-responsive">
@@ -118,12 +148,13 @@
               	<?php endforeach;?>
               </tbody>
             </table>
-            <div class="row">
-          		<div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-          		<div class="col-sm-6 text-right"><?php echo $results; ?></div>
-        	</div>
+            
           </div>
           </form>
+          <div class="row">
+              <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+              <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+          </div>
   	</div>
   </div>
 </div>
@@ -186,5 +217,25 @@ $("button:regex(id, ^nextStatus[0-9]+$)").click(function(e){
             dataType: 'json'
         });
     });
+
+
+$('#button-filter').on('click', function() {
+  url = 'index.php?route=video/video&token=<?php echo $token; ?>';
+  
+  var search_string = $('input[name=\'search_string\']').val();
+  
+  if (search_string) {
+    url += '&search_string=' + encodeURIComponent(search_string);
+  }
+  
+  var select_status = $('select[name=\'select_status\']').val();
+  
+  if (select_status != '*') {
+    url += '&select_status=' + encodeURIComponent(select_status);
+  } 
+  
+  location = url;
+});
 </script>
+</div>
 <?php echo $footer; ?>

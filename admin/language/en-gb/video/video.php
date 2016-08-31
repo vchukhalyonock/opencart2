@@ -28,6 +28,7 @@ $_['entry_description']		= 'Description';
 $_['entry_customer_link']	= 'Customer Link';
 $_['entry_channel_link']	= 'Channel Link';
 $_['entry_featured']		= 'Featured';
+$_['entry_search']			= 'Search';
 
 
 //Statuses
