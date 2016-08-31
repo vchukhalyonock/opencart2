@@ -597,6 +597,34 @@ class ControllerVideoVideo extends Controller {
 	}
 
 
+	public function addGroup() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+
+		$this->getGroupForm();
+	}
+
+
+	public function editGroup() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+		$this->getGroupForm();
+	}
+
+
+	public function getGroupForm() {
+
+	}
+
+
 	protected function validateVideoForm() {
 		if (!$this->user->hasPermission('modify', 'video/video')) {
 			$this->error['warning'] = $this->language->get('error_permission');
