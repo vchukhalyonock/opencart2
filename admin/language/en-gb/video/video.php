@@ -10,6 +10,8 @@ $_['text_list']             = 'Videos List';
 $_['text_groups_list']      = 'Videos Groups List';
 $_['text_add']              = 'Add Video';
 $_['text_edit']             = 'Edit Video';
+$_['text_group_add']		= 'Add Group';
+$_['text_group_edit']		= 'Edit Group';
 
 
 //Column

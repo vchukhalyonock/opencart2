@@ -621,7 +621,93 @@ class ControllerVideoVideo extends Controller {
 
 
 	public function getGroupForm() {
+		if (isset($this->error['warning'])) {
+			$data['error_warning'] = $this->error['warning'];
+		} else {
+			$data['error_warning'] = '';
+		}
 
+		if (isset($this->error['customer_link'])) {
+			$data['error_customer_link'] = $this->error['customer_link'];
+		} else {
+			$data['error_customer_link'] = '';
+		}
+
+		$data['heading_title'] = $this->language->get('heading_title');
+
+		$data['text_form'] = !isset($this->request->get['group_id']) ? $this->language->get('text_group_add') : $this->language->get('text_group_edit');
+		$data['entry_name'] = $this->language->get('entry_name');
+		$data['entry_description'] = $this->language->get('entry_description');
+
+
+		$data['button_save'] = $this->language->get('button_save');
+		$data['button_cancel'] = $this->language->get('button_cancel');
+
+		$data['token'] = $this->session->data['token'];
+
+		$data['video_id'] = isset($this->request->get['video_id'])
+			? $this->request->get['video_id']
+			: null;
+
+		$url = '&video_id=' . $data['video_id'];
+
+		$video = $this->model_video_channel->getVideo($data['video_id']);
+
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('heading_title'),
+			'href' => $this->url->link('video/video', 'token=' . $this->session->data['token'], true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $video['name'],
+			'href' => $this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true)
+		);
+
+		if (!isset($this->request->get['group_id'])) {
+			$data['action'] = $this->url->link('video/video/addGroup', 'token=' . $this->session->data['token'] . $url, true);
+		} else {
+			$data['action'] =
+				$this->url->link(
+					'video/video/editGroup',
+					'token=' . $this->session->data['token'] . '&group_id=' . $this->request->get['group_id'] . $url,
+					true);
+		}
+
+		$data['cancel'] = $this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true);
+
+		if (isset($this->request->get['group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+			$group = $this->model_video_channel->getGroup($this->request->get['group_id']);
+		}
+
+		if (isset($this->request->post['name'])) {
+			$data['name'] = $this->request->post['name'];
+		} elseif (!empty($group)) {
+			$data['name'] = $group['name'];
+		} else {
+			$data['name'] = '';
+		}
+
+		if (isset($this->request->post['decription'])) {
+			$data['description'] = $this->request->post['description'];
+		} elseif (!empty($group)) {
+			$data['description'] = $group['description'];
+		} else {
+			$data['description'] = '';
+		}
+
+
+		$data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+
+		$this->response->setOutput($this->load->view('video/video_group_form', $data));
 	}
 
 
