@@ -604,6 +604,22 @@ class ControllerVideoVideo extends Controller {
 
 		$this->load->model('video/channel');
 
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateVideoGroupForm()) {
+
+			$param = array(
+				'name' => $this->request->post['name'],
+				'description' => $this->request->post['description'],
+				);
+
+			$this->model_video_channel->createGroup($param);
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url = isset($this->request->get['video_id']) ? '&video_id=' . $this->request->get['video_id'] : '';
+
+			$this->response->redirect($this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true));
+		}
+
 
 		$this->getGroupForm();
 	}
@@ -627,10 +643,10 @@ class ControllerVideoVideo extends Controller {
 			$data['error_warning'] = '';
 		}
 
-		if (isset($this->error['customer_link'])) {
-			$data['error_customer_link'] = $this->error['customer_link'];
+		if (isset($this->error['group_name'])) {
+			$data['error_group_name'] = $this->error['group_name'];
 		} else {
-			$data['error_customer_link'] = '';
+			$data['error_group_name'] = '';
 		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
@@ -694,7 +710,7 @@ class ControllerVideoVideo extends Controller {
 			$data['name'] = '';
 		}
 
-		if (isset($this->request->post['decription'])) {
+		if (isset($this->request->post['description'])) {
 			$data['description'] = $this->request->post['description'];
 		} elseif (!empty($group)) {
 			$data['description'] = $group['description'];
@@ -726,6 +742,19 @@ class ControllerVideoVideo extends Controller {
 
 		if ($this->error && !isset($this->error['warning'])) {
 			$this->error['warning'] = $this->language->get('error_warning');
+		}
+
+		return !$this->error;
+	}
+
+
+	protected function validateVideoGroupForm() {
+		if (!$this->user->hasPermission('modify', 'video/video')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		if ((utf8_strlen($this->request->post['name']) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 255)) {
+			$this->error['group_name'] = $this->language->get('error_group_name');
 		}
 
 		return !$this->error;

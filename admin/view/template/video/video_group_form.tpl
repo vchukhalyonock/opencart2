@@ -27,10 +27,13 @@
 			<div class="panel-body">
 				<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-video" class="form-horizontal">
 
-					<div class="form-group">
+					<div class="form-group required">
 						<label class="col-sm-2 control-label" for="name"><?php echo $entry_name; ?></label>
 						<div class="col-sm-10">
 							<input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_name; ?>" id="name" class="form-control" />
+							<?php if ($error_group_name) { ?>
+								<div class="text-danger"><?php echo $error_group_name; ?></div>
+							<?php  } ?>
 						</div>
 					</div>
 
