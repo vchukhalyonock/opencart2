@@ -130,7 +130,7 @@ class ControllerVideoVideo extends Controller {
 		foreach ($allGroups['result'] as $group) {
 			$data['groups']['result'][] = array_merge($group, 
 					array(
-						'edit' => $this->url->link('video/video/editGroups', 'token=' . $this->session->data['token'] . '&group_id=' . $group['id'] . $url, true),
+						'edit' => $this->url->link('video/video/editGroup', 'token=' . $this->session->data['token'] . '&group_id=' . $group['id'] . $url, true),
 						'change_assoc' => $this->url->link(
 							'video/video/setAssoc',
 							'token=' . $this->session->data['token'] . '&video_id=' . $data['video_id'] . '&group_id=' . $group['id'],
@@ -631,6 +631,23 @@ class ControllerVideoVideo extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('video/channel');
+
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->get['group_id']) && $this->validateVideoGroupForm()) {
+
+			$param = array(
+				'id' => $this->request->get['group_id'],
+				'name' => $this->request->post['name'],
+				'description' => $this->request->post['description'],
+				);
+
+			$this->model_video_channel->updateGroup($param);
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url = isset($this->request->get['video_id']) ? '&video_id=' . $this->request->get['video_id'] : '';
+
+			$this->response->redirect($this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true));
+		}
 
 		$this->getGroupForm();
 	}

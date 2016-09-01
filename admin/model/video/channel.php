@@ -53,7 +53,9 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function getGroup(int $groupId) {
+	public function getGroup($groupId) {
+		$groupId = intval($groupId);
+
 		$result = $this->db
 			->query(
 				"SELECT " .
