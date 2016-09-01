@@ -136,6 +136,18 @@ $("button:regex(id, ^assocs[0-9]+$)").click(function(e){
             dataType: 'json'
         });
     });
+
+$('#button-filter').on('click', function() {
+  url = 'index.php?route=video/video/groups&token=<?php echo $token; ?>&video_id=<?php echo $video_id?>';
+  
+  var search_string = $('input[name=\'search_string\']').val();
+  
+  if (search_string) {
+    url += '&search_string=' + encodeURIComponent(search_string);
+  }
+  
+  location = url;
+});
 </script>
 </div>
 <?php echo $footer; ?>

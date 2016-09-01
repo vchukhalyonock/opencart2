@@ -67,6 +67,8 @@ class ControllerVideoVideo extends Controller {
 			$url .= "&video_id=" . $data['video_id'];
 		}
 
+		$data['token'] = $this->session->data['token'];
+
 		$data['order_id'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_ID . $url, true);
 		$data['order_name'] = $this->url->link('video/video', 'token=' . $this->session->data['token'] . '&order=' . ORDER_BY_NAME . $url, true);
 
