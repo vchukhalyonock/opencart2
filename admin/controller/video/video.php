@@ -111,12 +111,16 @@ class ControllerVideoVideo extends Controller {
 		$data['text_groups_list'] = $this->language->get('text_groups_list');
 		$data['text_associated'] = $this->language->get('text_associated');
 		$data['text_not_associated'] = $this->language->get('text_not_associated');
+		$data['text_confirm'] = $this->language->get('text_confirm');
 
 		$data['column_id'] = $this->language->get('column_id');
 		$data['column_name'] = $this->language->get('column_name');
 		$data['column_actions'] = $this->language->get('column_actions');
 		$data['column_associated'] = $this->language->get('column_associated');
 
+		$data['button_add'] = $this->language->get('button_add');
+		$data['button_edit'] = $this->language->get('button_edit');
+		$data['button_delete'] = $this->language->get('button_delete');
 		$data['button_filter'] = $this->language->get('button_filter');
 
 		$data['entry_search'] = $this->language->get('entry_search');
@@ -975,6 +979,59 @@ class ControllerVideoVideo extends Controller {
 
 
 	protected function validateDeleteVideos() {
+		if (!$this->user->hasPermission('modify', 'video/video')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		return !$this->error;
+	}
+
+
+	public function deleteGroups() {
+		$this->load->language('video/video');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('video/channel');
+
+		if (isset($this->request->post['selected']) && $this->validateDeletegroups()) {
+			
+			if(count($this->request->post['selected']) == 1)
+				$this->model_video_channel->deleteGroups(array_shift($this->request->post['selected']));
+			else
+				$this->model_video_channel->deleteGroups($this->request->post['selected']);
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url = '';
+
+			$url = '';
+
+			if(isset($this->request->get['search_string'])) {
+				$url .= "&search_string=" . $this->request->get['search_string'];
+			}
+
+			if(isset($this->request->get['order'])) {
+				$url .= "&order=" . $this->request->get['order'];
+			}
+
+			if(isset($this->request->get['video_id'])) {
+				$url .= "&video_id=" . $this->request->get['video_id'];
+			}
+
+			if(isset($this->request->get['page'])) {
+				$url .= "&order=" . $this->request->get['page'];
+			}
+			
+			
+			$this->response->redirect($this->url->link('video/video/groups', 'token=' . $this->session->data['token'] . $url, true));
+		}
+
+		$this->getGroupsList();
+	}
+
+
+	protected function validateDeleteGroups() {
 		if (!$this->user->hasPermission('modify', 'video/video')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}

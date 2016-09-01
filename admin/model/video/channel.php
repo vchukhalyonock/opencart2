@@ -107,9 +107,19 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function deleteGroup(int $groupId) {
-		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `groupId`=" . $groupId);
-		$this->db->query("DELETE FROM " . $this->_groupsTable . " WHERE `id`=" . $groupId);
+	public function deleteGroups($groupIds) {
+		$ids = array();
+		if(is_array($groupIds)) {
+			foreach ($groupIds as $id)
+				$ids[] = intval($id);
+		}
+		else {
+			$ids[] = intval($groupIds);
+		}
+
+
+		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `groupId` IN (" . implode(",", $ids) . ")");
+		$this->db->query("DELETE FROM " . $this->_groupsTable . " WHERE `id` IN (" . implode(",", $ids) . ")");
 
 		return;
 	}
