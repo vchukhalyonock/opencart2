@@ -101,7 +101,41 @@
        </div>
     </div>
 <script type="text/javascript">
-	
+jQuery.expr[':'].regex = function(elem, index, match) {
+    var matchParams = match[3].split(','),
+        validLabels = /^(data|css):/,
+        attr = {
+            method: matchParams[0].match(validLabels) ?
+                        matchParams[0].split(':')[0] : 'attr',
+            property: matchParams.shift().replace(validLabels,'')
+        },
+        regexFlags = 'ig',
+        regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
+    return regex.test(jQuery(elem)[attr.method](attr.property));
+}
+
+$("button:regex(id, ^assocs[0-9]+$)").click(function(e){
+        e.preventDefault();
+        var linkObj = this;
+        $.ajax ({
+            type: 'GET',
+            url: $(this).attr('link'),
+            success : function(data){
+               if(data.result == true) {
+                    $(linkObj).empty();
+                    if(data.assoc) {
+                      $(linkObj).attr('class', 'btn btn-danger');
+                      $(linkObj).text('<?php echo $text_associated?>');
+                    }
+                    else {
+                      $(linkObj).attr('class', 'btn btn-default');
+                      $(linkObj).text('<?php echo $text_not_associated?>');
+                    }
+               }
+            },
+            dataType: 'json'
+        });
+    });
 </script>
 </div>
 <?php echo $footer; ?>

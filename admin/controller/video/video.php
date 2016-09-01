@@ -1038,5 +1038,46 @@ class ControllerVideoVideo extends Controller {
 
 		return !$this->error;
 	}
-}
+
+
+	public function setAssoc() {
+		$this->load->model('video/channel');
+
+		if (!$this->user->hasPermission('modify', 'video/video') || !isset($this->request->get['video_id']) || !isset($this->request->get['group_id'])) {
+			$this->response->setOutput(json_encode(array('result' => false)));
+			die;
+		}
+
+		$videoId = $this->request->get['video_id'];
+		$groupId = $this->request->get['group_id'];
+		$video = $this->model_video_channel->getVideo($videoId);
+		$group = $this->model_video_channel->getGroup($groupId);
+
+		if(!$video || !$group) {
+			$this->response->setOutput(json_encode(array('result' => false)));
+			die;
+		}
+
+		$assoc = $this->model_video_channel->isVideoAssoc($videoId, $groupId);
+
+		if($assoc) {
+			$this->model_video_channel->groupVideoUnAssoc($videoId, $groupId);
+		}
+		else {
+			$this->model_video_channel->groupVideoAssoc($videoId, $groupId);
+		}
+
+		$assoc = $this->model_video_channel->isVideoAssoc($videoId, $groupId);
+
+		$this->response->setOutput(
+			json_encode(
+				array(
+					'result' => true,
+					'assoc' => $assoc,
+					'id' => $groupId
+					)
+				)
+			);
+	}
+} 
 ?>
