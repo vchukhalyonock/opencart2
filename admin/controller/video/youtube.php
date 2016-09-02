@@ -47,7 +47,35 @@ class ControllerVideoYoutube extends Controller {
 
 
 	public function upload() {
+		$this->load->model('video/channel');
 
+		$allVideos = $this->model_video_channel->getAllVideos(null, null, 'upload');
+		if(count($allVideos['result']) == 0)
+			die;
+
+		foreach ($allVideos['result'] as $video) {
+			$name = !empty($video['name']) ? $video['name'] : 'Video #' . $video['id'];
+			$description = !empty($video['description']) ? $video['description'] : 'Video #' . $video['id'];
+
+			$result = uploadToYoutube($video['id'], '22', $name, strip_tags($description));
+
+			if($result) {
+				$this->model_video_channel->updateVideo(
+				array(
+					'id' => $video['id'],
+					'videoStatus' => 'not_ready'
+					)
+				);
+			}
+			else {
+				$this->model_video_channel->updateVideo(
+				array(
+					'id' => $video['id'],
+					'videoStatus' => 'err_upload'
+					)
+				);
+			}
+		}
 	}
 }
 ?>

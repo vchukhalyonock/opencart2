@@ -57,9 +57,9 @@ define("READY", 1 << 7);
 //YOUTUBE
 define("YOUTUBE_CLIENT_KEY", "AIzaSyCg_zkFJ3SlRF2jUUeBxQPv3UZ93jrBcag");
 define("YOUTUBE_TOKEN_FILE_PATH", "/home/mcmxx/www/opencart/system/config/token.txt");
-define("YOUTUBE_APPLICATION_NAME", "Test Name");
-define("YOUTUBE_CLIENT_SECRET", "");
-define("YOUTUBE_CLIENT_ID", "");
+define("YOUTUBE_APPLICATION_NAME", "OpencartYoutubeClient");
+define("YOUTUBE_CLIENT_SECRET", "56684084089-en1tcfa5db1qocee7hl7io4un7m8dlqr.apps.googleusercontent.com");
+define("YOUTUBE_CLIENT_ID", "qDtEf9yGGOaPGQh0kJnHCY_-");
 
 //PAGINATION
 define("ITEMS_ON_PAGE", 20);

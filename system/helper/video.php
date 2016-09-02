@@ -222,7 +222,7 @@ if ( !function_exists('uploadToYoutube') ) {
 
 		//REWRITE THIS
 		// get file name by video id
-		$dirMap = directory_map($root_folder . '/' . $upload_dir . '/');
+		$dirMap = scandir(DIR_VIDEO);
 		foreach ( $dirMap as $file ) {
 			if ( preg_match("/^" . $video_id . "\.[a-zA-Z0-9]{1,4}$/", $file) ) {
 				$fileName = $file;
@@ -233,13 +233,15 @@ if ( !function_exists('uploadToYoutube') ) {
 		// construct full path for video
 		$final_video_path = DIR_VIDEO . $fileName;
 
+		oc_cli_output($final_video_path);
+
 		try {
 			// Client init
 			$client = new Google_Client();
 			$client->setApplicationName(YOUTUBE_APPLICATION_NAME);
 			$client->setClientId(YOUTUBE_CLIENT_ID);
 			$client->setAccessType('offline');
-			$client->setAccessToken(YOUTUBE_CLIENT_KEY);
+			$client->setAccessToken($key);
 			$client->setScopes($scope);
 			$client->setClientSecret(YOUTUBE_CLIENT_SECRET);
 
@@ -324,8 +326,10 @@ if ( !function_exists('uploadToYoutube') ) {
 			}
 
 		} catch ( Google_Service_Exception $e ) {
+			oc_cli_output("Google_Service_Exception");
 			return FALSE;
 		} catch ( Exception $e ) {
+			oc_cli_output("Simple Exception" . $e->getMessage() . "|" . $e->getLine() . "|" . $e->getFile());
 			return FALSE;
 		}
 	}
