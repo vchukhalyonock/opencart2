@@ -143,10 +143,6 @@ if ( !function_exists('downloadFromYoutube') ) {
 	 */
 	function downloadFromYoutube($video_id = '', $youtube_id = '', $video_type = 'video/mp4')
 	{
-		$CI = get_instance();
-		$CI->load->helper('eventlog');
-		$CI->config->load('main');
-
 		if ( $video_id == '' ) {
 			return FALSE;
 		}
@@ -180,6 +176,7 @@ if ( !function_exists('downloadFromYoutube') ) {
 		$mimeTypes = explode('/', $video_type);
 		$extension = $mimeTypes[1];
 		$final_upload_path = DIR_VIDEO . $video_id . '.' . $extension;
+
 
 		if ( !is_dir($final_upload_path) ) {
 			if ( FALSE === writeVideoFromYoutube(

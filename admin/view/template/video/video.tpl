@@ -51,8 +51,8 @@
                   <option value="upload" <?php if($select_status == 'upload') echo "selected";?>><?php echo $status_upload;?></option>
                   <option value="not_ready" <?php if($select_status == 'not_ready') echo "selected";?>><?php echo $status_not_ready;?></option>
                   <option value="ready" <?php if($select_status == 'ready') echo "selected";?>><?php echo $status_ready;?></option>
-                  <option value="error_upload" <?php if($select_status == 'error_upload') echo "selected";?>><?php echo $status_error_upload;?></option>
-                  <option value="error_download" <?php if($select_status == 'error_download') echo "selected";?>><?php echo $status_error_download;?></option>
+                  <option value="err_upload" <?php if($select_status == 'err_upload') echo "selected";?>><?php echo $status_error_upload;?></option>
+                  <option value="err_download" <?php if($select_status == 'err_download') echo "selected";?>><?php echo $status_error_download;?></option>
                 </select>
               </div>
                <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
