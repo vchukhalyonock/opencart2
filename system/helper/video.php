@@ -278,7 +278,7 @@ if ( !function_exists('uploadToYoutube') ) {
 					$tempToken = $newToken;
 					$tempToken->access_token = $token->access_token;
 					$tempToken->created = time();
-					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, json_encode($token);
+					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, json_encode($token));
 				}
 
 				$youtube = new Google_Service_YouTube($client);
