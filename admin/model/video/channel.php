@@ -5,9 +5,9 @@
 class ModelVideoChannel extends Model {
 
 
-	private $_table = 'oc_videos';
-	private $_groupsTable = 'oc_videos_groups';
-	private $_groupsAssocTable = 'oc_videos_groups_assoc';
+	private $_table = 'videos';
+	private $_groupsTable = 'videos_groups';
+	private $_groupsAssocTable = 'videos_groups_assoc';
 	private $_customerTable = 'customer';
 
 
@@ -15,7 +15,7 @@ class ModelVideoChannel extends Model {
 		$name = isset($param['name']) ? strval($param['name']) : NULL;
 		$description = isset($param['description']) ? strval($param['description']) : NULL;
 
-		$query = "INSERT INTO " . $this->_groupsTable . "(`name`, `description`) VALUES (";
+		$query = "INSERT INTO " . DB_PREFIX . $this->_groupsTable . "(`name`, `description`) VALUES (";
 		$query .= is_null($name) ? "NULL, " : "'" . $this->db->escape($name) . "', ";
 		$query .= is_null($description) ? "NULL, " : "'" . $this->db->escape($description) . "')";
 
@@ -45,7 +45,7 @@ class ModelVideoChannel extends Model {
 				$queryArray[] = is_null($description) ? "`description`=NULL, " : "`description`='" . $this->db->escape($description) . "'";
 			}
 
-			$query = "UPDATE " . $this->_groupsTable . " SET " . implode(",", $queryArray) . " WHERE `id`=" . $groupId;
+			$query = "UPDATE " . DB_PREFIX . $this->_groupsTable . " SET " . implode(",", $queryArray) . " WHERE `id`=" . $groupId;
 			$this->db->query($query);
 		}
 
@@ -62,7 +62,7 @@ class ModelVideoChannel extends Model {
 					"`id`,
 					`name`,
 					`description`
-				FROM " . $this->_groupsTable
+				FROM " . DB_PREFIX . $this->_groupsTable
 				. " WHERE `id`=" . $groupId
 				. " LIMIT 1"
 				);
@@ -88,7 +88,7 @@ class ModelVideoChannel extends Model {
 			. "`id`,
 				`name`,
 				`description`"
-			. "FROM " . $this->_groupsTable
+			. "FROM " . DB_PREFIX . $this->_groupsTable
 			. " ORDER BY " . $orderField . $orderDirection;
 
 		if($limit > 0)
@@ -118,8 +118,8 @@ class ModelVideoChannel extends Model {
 		}
 
 
-		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `groupId` IN (" . implode(",", $ids) . ")");
-		$this->db->query("DELETE FROM " . $this->_groupsTable . " WHERE `id` IN (" . implode(",", $ids) . ")");
+		$this->db->query("DELETE FROM " . DB_PREFIX . $this->_groupsAssocTable . " WHERE `groupId` IN (" . implode(",", $ids) . ")");
+		$this->db->query("DELETE FROM " . DB_PREFIX . $this->_groupsTable . " WHERE `id` IN (" . implode(",", $ids) . ")");
 
 		return;
 	}
@@ -137,7 +137,7 @@ class ModelVideoChannel extends Model {
 		$queryArray[] = isset($param['thumbnailId']) ? intval($param['thumbnailId']) : "NULL";
 		$queryArray[] = isset($param['customerId']) ? intval($param['customerId']) : "NULL";
 
-		$query = "INSERT INTO " . $this->_table . "(
+		$query = "INSERT INTO " . DB_PREFIX . $this->_table . "(
 			`name`,
 			`description`,
 			`videoStatus`,
@@ -197,7 +197,7 @@ class ModelVideoChannel extends Model {
 			$queryArray[] = is_null($param['customerId']) ? "`customerId`=NULL" : "`customerId`=" . intval($param['customerId']);
 		}
 
-		$query = "UPDATE `" . $this->_table . "` SET " . implode(",", $queryArray) . " WHERE `id`=" . intval($param['id']);
+		$query = "UPDATE `" . DB_PREFIX . $this->_table . "` SET " . implode(",", $queryArray) . " WHERE `id`=" . intval($param['id']);
 
 		$this->db->query($query);
 
@@ -211,21 +211,21 @@ class ModelVideoChannel extends Model {
 
 		$result = $this->db->query(
 			"SELECT "
-				. $this->_table . ".id AS id,"
-				. $this->_table . ".name AS name,"
-				. $this->_table . ".description AS description,"
-				. $this->_table . ".videoStatus AS videoStatus,"
-				. $this->_table . ".featured AS featured,"
-				. $this->_table . ".customerLink AS customerLink,"
-				. $this->_table . ".channelLink AS channelLink,"
-				. $this->_table . ".thumbnailId AS thumbnailId,"
-				. $this->_table . ".customerId AS customerId,"
+				. DB_PREFIX . $this->_table . ".id AS id,"
+				. DB_PREFIX . $this->_table . ".name AS name,"
+				. DB_PREFIX . $this->_table . ".description AS description,"
+				. DB_PREFIX . $this->_table . ".videoStatus AS videoStatus,"
+				. DB_PREFIX . $this->_table . ".featured AS featured,"
+				. DB_PREFIX . $this->_table . ".customerLink AS customerLink,"
+				. DB_PREFIX . $this->_table . ".channelLink AS channelLink,"
+				. DB_PREFIX . $this->_table . ".thumbnailId AS thumbnailId,"
+				. DB_PREFIX . $this->_table . ".customerId AS customerId,"
 				. DB_PREFIX . $this->_customerTable . ".email AS email "
-			. "FROM " . $this->_table
+			. "FROM " . DB_PREFIX . $this->_table
 			. " LEFT JOIN "
 				. DB_PREFIX . $this->_customerTable
-				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . $this->_table . ".customerId "
-			. "WHERE " . $this->_table . ".id=" . $videoId
+				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . DB_PREFIX . $this->_table . ".customerId "
+			. "WHERE " . DB_PREFIX . $this->_table . ".id=" . $videoId
 			. " LIMIT 1"
 			);
 
@@ -267,41 +267,43 @@ class ModelVideoChannel extends Model {
 			$orderField = "id ";
 
 		$query = "SELECT SQL_CALC_FOUND_ROWS "
-			. $this->_table . ".id AS id,"
-			. $this->_table . ".name AS name,"
-			. $this->_table . ".description AS description,"
-			. $this->_table . ".videoStatus AS videoStatus,"
-			. $this->_table . ".featured AS featured,"
-			. $this->_table . ".customerLink AS customerLink,"
-			. $this->_table . ".channelLink AS channelLink,"
-			. $this->_table . ".thumbnailId AS thumbnailId,"
-			. $this->_table . ".customerId AS customerId,"
+			. DB_PREFIX . $this->_table . ".id AS id,"
+			. DB_PREFIX . $this->_table . ".name AS name,"
+			. DB_PREFIX . $this->_table . ".description AS description,"
+			. DB_PREFIX . $this->_table . ".videoStatus AS videoStatus,"
+			. DB_PREFIX . $this->_table . ".featured AS featured,"
+			. DB_PREFIX . $this->_table . ".customerLink AS customerLink,"
+			. DB_PREFIX . $this->_table . ".channelLink AS channelLink,"
+			. DB_PREFIX . $this->_table . ".thumbnailId AS thumbnailId,"
+			. DB_PREFIX . $this->_table . ".customerId AS customerId,"
 			. DB_PREFIX . $this->_customerTable . ".email AS email "
-			. "FROM " . $this->_table
+			. "FROM " . DB_PREFIX . $this->_table
 			. " LEFT JOIN "
 				. DB_PREFIX . $this->_customerTable
-				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . $this->_table . ".customerId ";
+				. " ON " . DB_PREFIX . $this->_customerTable . ".customer_id = " . DB_PREFIX . $this->_table . ".customerId ";
 
 		if(!is_null($groupId)) {
-			$query .= " LEFT JOIN " . $this->_groupsAssocTable . " ON " . $this->_groupsAssocTable . ".videoId = " . $this->_table . ".id ";
+			$query .= " LEFT JOIN " . DB_PREFIX . $this->_groupsAssocTable
+				. " ON " . DB_PREFIX . $this->_groupsAssocTable
+				. ".videoId = " . DB_PREFIX . $this->_table . ".id ";
 		}
 
 
 		//WHERE part
 		if(!is_null($select)) {
-			$whereArray[] = $this->_table . ".videoStatus='" . $this->db->escape($select) . "'";
+			$whereArray[] = DB_PREFIX . $this->_table . ".videoStatus='" . $this->db->escape($select) . "'";
 		}
 
 		if(!is_null($groupId)) {
-			$whereArray[] = $this->_groupsAssocTable . ".groupId = " . $groupId;
+			$whereArray[] = DB_PREFIX . $this->_groupsAssocTable . ".groupId = " . $groupId;
 		}
 
 		if(!is_null($search)) {
 			$search = "'" . $this->db->escape("%" . $search . "%") . "'";
 			$whereArray[] = "("
-				. $this->_table . ".name LIKE ({$search}) OR "
-				. $this->_table . ".description LIKE ({$search}) OR "
-				. $this->_table . ".videoStatus LIKE ({$search}) OR "
+				. DB_PREFIX . $this->_table . ".name LIKE ({$search}) OR "
+				. DB_PREFIX . $this->_table . ".description LIKE ({$search}) OR "
+				. DB_PREFIX . $this->_table . ".videoStatus LIKE ({$search}) OR "
 				. DB_PREFIX . $this->_customerTable . ".email LIKE ({$search}) )";
 		}
 
@@ -329,7 +331,7 @@ class ModelVideoChannel extends Model {
 	public function isLinkExists($customerLink) {
 		$customerLink = strval($customerLink);
 		$res = $this->db->query(
-			"SELECT `id` FROM " . $this->_table . " WHERE `customerLink`='" . $this->db->escape($customerLink) . "' LIMIT 1");
+			"SELECT `id` FROM " . DB_PREFIX . $this->_table . " WHERE `customerLink`='" . $this->db->escape($customerLink) . "' LIMIT 1");
 
 		return $res->num_rows > 0 ? true : false;
 	}
@@ -346,8 +348,8 @@ class ModelVideoChannel extends Model {
 		}
 
 
-		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId` IN (" . implode(",", $ids) . ")");
-		$this->db->query("DELETE FROM " . $this->_table . " WHERE `id` IN (" . implode(",", $ids) . ")");
+		$this->db->query("DELETE FROM " . DB_PREFIX . $this->_groupsAssocTable . " WHERE `videoId` IN (" . implode(",", $ids) . ")");
+		$this->db->query("DELETE FROM " . DB_PREFIX . $this->_table . " WHERE `id` IN (" . implode(",", $ids) . ")");
 
 		return;
 	}
@@ -357,7 +359,7 @@ class ModelVideoChannel extends Model {
 		$videoId = intval($videoId);
 		$groupId = intval($groupId);
 		$res = $this->db->query(
-			"SELECT `groupId`, `videoId` FROM " . $this->_groupsAssocTable
+			"SELECT `groupId`, `videoId` FROM " . DB_PREFIX . $this->_groupsAssocTable
 				. " WHERE `groupId`=" . $groupId . " AND `videoId`=" .  $videoId . " LIMIT 1");
 		return $res->num_rows > 0 ? true : false;
 	}
@@ -366,7 +368,7 @@ class ModelVideoChannel extends Model {
 	public function setFeatured($videoId, $featured = TRUE) {
 		$videoId = intval($videoId);
 		$featured = ($featured) ? 1 : 0;
-		$this->db->query("UPDATE " . $this->_table . " SET `featured`=" . $featured . " WHERE `id`=" . $videoId);
+		$this->db->query("UPDATE " . DB_PREFIX . $this->_table . " SET `featured`=" . $featured . " WHERE `id`=" . $videoId);
 		return;
 	}
 
@@ -377,7 +379,7 @@ class ModelVideoChannel extends Model {
 		if($this->isVideoAssoc($videoId, $groupId) == 1)
 			return;
 
-		$this->db->query("INSERT INTO " . $this->_groupsAssocTable . "(`groupId`, `videoId`) VALUES (" . $groupId . ", " . $videoId . ")");
+		$this->db->query("INSERT INTO " . DB_PREFIX . $this->_groupsAssocTable . "(`groupId`, `videoId`) VALUES (" . $groupId . ", " . $videoId . ")");
 		return;
 	}
 
@@ -385,7 +387,8 @@ class ModelVideoChannel extends Model {
 	public function groupVideoUnAssoc($videoId, $groupId) {
 		$videoId = intval($videoId);
 		$groupId = intval($groupId);
-		$this->db->query("DELETE FROM " . $this->_groupsAssocTable . " WHERE `videoId`=" . $videoId . " AND `groupId`=" . $groupId . " LIMIT 1");
+		$this->db->query("DELETE FROM " . DB_PREFIX . $this->_groupsAssocTable
+				. " WHERE `videoId`=" . $videoId . " AND `groupId`=" . $groupId . " LIMIT 1");
 		return;
 	}
 }
