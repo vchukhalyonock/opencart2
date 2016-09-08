@@ -253,7 +253,7 @@ if ( !function_exists('uploadToYoutube') ) {
 				if ( $client->isAccessTokenExpired() ) {
 					$newToken = json_decode($client->getAccessToken());
 					$client->refreshToken($newToken->refresh_token);
-					file_put_contents($token_path, $client->getAccessToken());
+					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, $client->getAccessToken());
 				}
 
 				$youtube = new Google_Service_YouTube($client);
