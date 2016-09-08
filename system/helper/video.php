@@ -251,9 +251,13 @@ if ( !function_exists('uploadToYoutube') ) {
 				 * Check to see if our access token has expired. If so, get a new one and save it to file for future use.
 				 */
 				if ( $client->isAccessTokenExpired() ) {
+					echo "ONE\n";
 					$newToken = json_decode($client->getAccessToken());
+					echo "TWO\n";
 					$client->refreshToken($newToken->refresh_token);
+					echo "THREE\n";
 					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, $client->getAccessToken());
+					echo "FOUR\n";
 				}
 
 				$youtube = new Google_Service_YouTube($client);
