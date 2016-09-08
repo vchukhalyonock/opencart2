@@ -261,8 +261,10 @@ if ( !function_exists('uploadToYoutube') ) {
 						'refresh_token' => $newToken->refresh_token);
 
 					$curlParams = array(
-						CURLOPT_URL => "https://accounts.google.com/o/oauth2/token?" . http_build_query($urlParam),
+						CURLOPT_URL => "https://accounts.google.com/o/oauth2/token",
 						CURLOPT_HEADER => 0,
+						CURLOPT_POST = 1,
+						CURLOPT_POSTFIELDS = $urlParam,
 						CURLOPT_RETURNTRANSFER => TRUE,
 						CURLOPT_TIMEOUT => 5
 						);
