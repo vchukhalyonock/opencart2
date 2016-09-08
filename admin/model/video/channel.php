@@ -328,10 +328,17 @@ class ModelVideoChannel extends Model {
 	}
 
 
-	public function isLinkExists($customerLink) {
+	public function isLinkExists($customerLink, $videoId = null) {
 		$customerLink = strval($customerLink);
-		$res = $this->db->query(
-			"SELECT `id` FROM " . DB_PREFIX . $this->_table . " WHERE `customerLink`='" . $this->db->escape($customerLink) . "' LIMIT 1");
+		$videoId = is_null($videoId) ? null : intval($videoId);
+
+		$query = "SELECT `id` FROM " . DB_PREFIX . $this->_table . " WHERE `customerLink`='" . $this->db->escape($customerLink) . "'";
+		if(!is_null($videoId))
+			$query .= " AND `id`!=" . $videoId;
+
+		$query .= " LIMIT 1";
+
+		$res = $this->db->query($query);
 
 		return $res->num_rows > 0 ? true : false;
 	}

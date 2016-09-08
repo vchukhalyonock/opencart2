@@ -755,11 +755,13 @@ class ControllerVideoVideo extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
+		$videoId = isset($this->request->get['video_id']) ? $this->request->get['video_id'] : null;
+
 		if ((utf8_strlen($this->request->post['customer_link']) < 1) || (utf8_strlen(trim($this->request->post['customer_link'])) > 255)
 			|| !filter_var($this->request->post['customer_link'], FILTER_VALIDATE_URL)) {
 			$this->error['customer_link'] = $this->language->get('error_customer_link');
 		}
-		elseif($this->model_video_channel->isLinkExists($this->request->post['customer_link'])) {
+		elseif($this->model_video_channel->isLinkExists($this->request->post['customer_link'], $videoId)) {
 			$this->error['customer_link'] = $this->language->get('error_customer_link_exist');
 		}
 
