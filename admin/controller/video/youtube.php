@@ -63,7 +63,8 @@ class ControllerVideoYoutube extends Controller {
 				$this->model_video_channel->updateVideo(
 				array(
 					'id' => $video['id'],
-					'videoStatus' => 'not_ready'
+					'videoStatus' => 'not_ready',
+					'channelLink' => $result->getId()
 					)
 				);
 			}
