@@ -16,10 +16,10 @@ session_start();
  * <https://developers.google.com/youtube/v3/guides/authentication>
  * Please ensure that you have enabled the YouTube Data API for your project.
  */
-$OAUTH2_CLIENT_ID = '56684084089-en1tcfa5db1qocee7hl7io4un7m8dlqr.apps.googleusercontent.com';
-$OAUTH2_CLIENT_SECRET = 'qDtEf9yGGOaPGQh0kJnHCY_-';
+$OAUTH2_CLIENT_ID = '1017264013084-hg687hi7d0d9cs7soef257i03uorugmf.apps.googleusercontent.com';
+$OAUTH2_CLIENT_SECRET = 'LyQjg95qMGcqerB0CQpV40ZR';
 $REDIRECT = 'http://opencart.com/oauth2callback.php';
-$APPNAME = "OpencartYoutubeClient";
+$APPNAME = "InfratechYoutubeChannel";
  
  
 $client = new Google_Client();
@@ -29,6 +29,7 @@ $client->setScopes('https://www.googleapis.com/auth/youtube');
 $client->setRedirectUri($REDIRECT);
 $client->setApplicationName($APPNAME);
 $client->setAccessType('offline');
+$client->setApprovalPrompt('force');
  
  
 // Define an object that will be used to make all API requests.
@@ -41,7 +42,6 @@ if (isset($_GET['code'])) {
  
     $client->authenticate($_GET['code']);
     $_SESSION['token'] = $client->getAccessToken();
- 
 }
  
 if (isset($_SESSION['token'])) {

@@ -252,35 +252,8 @@ if ( !function_exists('uploadToYoutube') ) {
 				 */
 				if ( $client->isAccessTokenExpired() ) {
 					$newToken = json_decode($client->getAccessToken());
-					/*$client->refreshToken($newToken->refresh_token);
-					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, $client->getAccessToken());*/
-					$urlParam = array(
-						'grant_type' => 'refresh_token',
-						'client_id' => YOUTUBE_CLIENT_ID,
-						'client_secret' => YOUTUBE_CLIENT_SECRET,
-						'refresh_token' => $newToken->refresh_token);
-
-					$curlParams = array(
-						CURLOPT_URL => "https://accounts.google.com/o/oauth2/token",
-						CURLOPT_HEADER => 0,
-						CURLOPT_POST => 1,
-						CURLOPT_POSTFIELDS => $urlParam,
-						CURLOPT_RETURNTRANSFER => TRUE,
-						CURLOPT_TIMEOUT => 5
-						);
-
-					$ch = curl_init();
-					curl_setopt_array($ch, $curlParams);
-					$result = curl_exec($ch);
-					if(!$result)
-						throw new Exception("Error CURL query");
-						
-					$token = json_decode($result);
-					$tempToken = new stdClass();
-					$tempToken = $newToken;
-					$tempToken->access_token = $token->access_token;
-					$tempToken->created = time();
-					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, json_encode($token));
+					$client->refreshToken($newToken->refresh_token);
+					file_put_contents(YOUTUBE_TOKEN_FILE_PATH, $client->getAccessToken());
 				}
 
 				$youtube = new Google_Service_YouTube($client);

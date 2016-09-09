@@ -57,9 +57,9 @@ define("READY", 1 << 7);
 //YOUTUBE
 define("YOUTUBE_CLIENT_KEY", "AIzaSyCg_zkFJ3SlRF2jUUeBxQPv3UZ93jrBcag");
 define("YOUTUBE_TOKEN_FILE_PATH", "/home/mcmxx/www/opencart/system/config/token.txt");
-define("YOUTUBE_APPLICATION_NAME", "OpencartYoutubeClient");
-define("YOUTUBE_CLIENT_SECRET", "56684084089-en1tcfa5db1qocee7hl7io4un7m8dlqr.apps.googleusercontent.com");
-define("YOUTUBE_CLIENT_ID", "qDtEf9yGGOaPGQh0kJnHCY_-");
+define("YOUTUBE_APPLICATION_NAME", "InfratechYoutubeChannel");
+define("YOUTUBE_CLIENT_SECRET", "6Bo135UpH7Vjlxyqn-TK6fuo");
+define("YOUTUBE_CLIENT_ID", "1017264013084-7siv3g9h9bmivqnj1fj7bab5h5ml13to.apps.googleusercontent.com");
 
 //PAGINATION
 define("ITEMS_ON_PAGE", 20);
