@@ -39,6 +39,26 @@ class ControllerCommonColumnLeft extends Controller {
 				'href'     => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true),
 				'children' => array()
 			);
+
+			//Video
+			$video = array();
+			if($this->user->hasPermission('access', 'video/video')) {
+				$video[] = array(
+					'name' => $this->language->get('text_video'),
+					'href' => $this->url->link('video/video', 'token=' . $this->session->data['token'], true),
+					'children' => array()
+				);
+			}
+
+			if ($video) {
+				$data['menus'][] = array(
+					'id'       => 'menu-video',
+					'icon'	   => 'fa-tags', 
+					'name'	   => $this->language->get('text_video'),
+					'href'     => '',
+					'children' => $video
+				);		
+			}
 			
 			// Catalog
 			$catalog = array();
