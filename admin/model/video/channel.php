@@ -133,7 +133,7 @@ class ModelVideoChannel extends Model {
 		$queryArray[] = isset($param['videoStatus']) ? "'" . $this->db->escape(strval($param['videoStatus'])) . "'" : "'new'";
 		$queryArray[] = isset($param['featured']) ? intval($param['name']) : 0;
 		$queryArray[] = isset($param['customerLink']) ? "'" . $this->db->escape(strval($param['customerLink'])) . "'" : "NULL";
-		$queryArray[] = isset($param['channelLink']) ? "'" . $this->db->escape(strval($param['channelLink'])) . "'" : "NULL";
+		$queryArray[] = isset($param['channelLink']) && trim($param['channelLink']) != '' ? "'" . $this->db->escape(strval($param['channelLink'])) . "'" : "NULL";
 		$queryArray[] = isset($param['thumbnailId']) ? intval($param['thumbnailId']) : "NULL";
 		$queryArray[] = isset($param['customerId']) ? intval($param['customerId']) : "NULL";
 

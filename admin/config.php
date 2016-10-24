@@ -20,7 +20,7 @@ define('DIR_LOGS', '/home/mcmxx/www/opencart/system/storage/logs/');
 define('DIR_MODIFICATION', '/home/mcmxx/www/opencart/system/storage/modification/');
 define('DIR_UPLOAD', '/home/mcmxx/www/opencart/system/storage/upload/');
 define('DIR_CATALOG', '/home/mcmxx/www/opencart/catalog/');
-define('DIR_VIDEO', '/home/mcmxx/www/opencart/system/storage/upload/videos/');
+define('DIR_VIDEO', '/home/mcmxx/www/opencart/system/storage/videos/');
 define('DIR_THIRD_PARTY', '/home/mcmxx/www/opencart/system/third_party/');
 
 // DB
